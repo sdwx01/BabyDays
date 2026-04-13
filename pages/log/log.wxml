@@ -1,7 +1,8 @@
 <view class="log-page">
   <view class="log-header">
     <text class="log-title">记录宝宝的每一刻 💕</text>
-    <text class="log-subtitle">点击分类快速记录</text>
+    <text class="log-subtitle" wx:if="{{todayCount > 0}}">今日已记录 {{todayCount}} 条</text>
+    <text class="log-subtitle" wx:else>点击分类，快速添加记录</text>
   </view>
 
   <view class="categories-grid">

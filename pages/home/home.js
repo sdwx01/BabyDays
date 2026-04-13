@@ -1,4 +1,4 @@
-const storage  = require('../../utils/storage');
+const storage   = require('../../utils/storage');
 const datetime  = require('../../utils/datetime');
 const constants = require('../../utils/constants');
 const cloud     = require('../../utils/cloud');
@@ -10,7 +10,6 @@ Page({
     babyName: '',
     babyAge: '',
     chips: [],
-    categories: [],
     todayRecords: [],
     isEmpty: true,
     activeSleep: null,
@@ -50,7 +49,6 @@ Page({
 
     const stats = this._computeStats(records);
     const chips = this._buildChips(stats);
-    const categories = this._buildCategories(stats);
 
     const now = new Date();
     const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -62,7 +60,6 @@ Page({
       babyName: meta.babyName || '小宝贝',
       babyAge: meta.birthDate ? datetime.babyAge(meta.birthDate) : '',
       chips,
-      categories,
       todayRecords: sorted,
       isEmpty: sorted.length === 0,
       activeSleep: storage.getActiveSleep(),
@@ -124,26 +121,6 @@ Page({
     });
 
     return chips;
-  },
-
-  _buildCategories(stats) {
-    return constants.CATEGORIES.map(cat => {
-      const s = stats[cat.key] || { count: 0, lastAgo: null };
-      return {
-        key: cat.key,
-        label: cat.label,
-        emoji: cat.emoji,
-        color: cat.color,
-        bgColor: cat.bgColor,
-        count: s.count,
-        lastAgo: s.lastAgo || '暂无记录'
-      };
-    });
-  },
-
-  onCategoryTap(e) {
-    const key = e.currentTarget.dataset.key;
-    wx.navigateTo({ url: `/pages/forms/${key}/${key}` });
   },
 
   onCardTap(e) {

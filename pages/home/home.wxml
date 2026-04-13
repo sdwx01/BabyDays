@@ -39,30 +39,6 @@
     <view class="chips-end-spacer"></view>
   </scroll-view>
 
-  <!-- Quick log grid -->
-  <view class="section-wrapper">
-    <view class="section-title-row">
-      <text class="section-title-text">快速记录</text>
-    </view>
-    <view class="category-grid">
-      <view
-        class="category-tile"
-        wx:for="{{categories}}"
-        wx:key="key"
-        bindtap="onCategoryTap"
-        data-key="{{item.key}}"
-        style="background: {{item.bgColor}};"
-      >
-        <view class="tile-emoji-wrap" style="background: {{item.color}}20;">
-          <text class="tile-emoji">{{item.emoji}}</text>
-        </view>
-        <text class="tile-label">{{item.label}}</text>
-        <text class="tile-count" wx:if="{{item.count > 0}}">今日{{item.count}}次</text>
-        <text class="tile-count" wx:else>{{item.lastAgo}}</text>
-      </view>
-    </view>
-  </view>
-
   <!-- Today's timeline -->
   <view class="section-wrapper" wx:if="{{!isEmpty}}">
     <section-header emoji="📋" title="今日记录" color="#FF8FAB" />
@@ -78,8 +54,16 @@
   <view class="empty-state" wx:if="{{isEmpty}}">
     <text class="empty-state-emoji">🌸</text>
     <text class="empty-state-text">今日暂无记录</text>
-    <text class="empty-state-sub">点击上方卡片或"记录"标签开始记录</text>
+    <text class="empty-state-sub">点击下方「记录」标签，开始记录宝宝的每一刻</text>
+    <view class="empty-go-log" bindtap="onLogTap">
+      <text class="empty-go-log-text">去记录 →</text>
+    </view>
   </view>
 
   <view class="bottom-spacer"></view>
 </scroll-view>
+
+<!-- Floating action button -->
+<view class="log-fab" bindtap="onLogTap" wx:if="{{!isEmpty}}">
+  <text class="log-fab-text">＋ 记录</text>
+</view>

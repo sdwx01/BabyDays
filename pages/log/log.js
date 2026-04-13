@@ -1,10 +1,11 @@
-const storage = require('../../utils/storage');
-const datetime = require('../../utils/datetime');
+const storage  = require('../../utils/storage');
+const datetime  = require('../../utils/datetime');
 const constants = require('../../utils/constants');
 
 Page({
   data: {
-    categories: []
+    categories: [],
+    todayCount: 0
   },
 
   onShow() {
@@ -12,19 +13,17 @@ Page({
   },
 
   _buildCategories() {
-    const activeSleep = storage.getActiveSleep();
+    const activeSleep  = storage.getActiveSleep();
     const activeOuting = storage.getActiveOuting();
+    const todayCount   = storage.getRecordsByDate(datetime.todayKey()).length;
 
     const categories = constants.CATEGORIES.map(cat => {
       const last = storage.getLastRecordOfType(cat.key);
-      let lastAgo = last ? datetime.timeAgo(last.recordedAt) : '暂无记录';
+      const lastAgo = last ? datetime.timeAgo(last.recordedAt) : '暂无记录';
       let badge = '';
 
-      if (cat.key === 'sleep' && activeSleep) {
-        badge = '进行中';
-      } else if (cat.key === 'outing' && activeOuting) {
-        badge = '进行中';
-      }
+      if (cat.key === 'sleep'  && activeSleep)  badge = '进行中';
+      if (cat.key === 'outing' && activeOuting) badge = '进行中';
 
       return {
         key: cat.key,
@@ -37,7 +36,7 @@ Page({
       };
     });
 
-    this.setData({ categories });
+    this.setData({ categories, todayCount });
   },
 
   onCategoryTap(e) {
