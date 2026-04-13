@@ -1,0 +1,19 @@
+@import '/app.wxss';
+
+.form-page { height: 100vh; background: #FFF9F9; }
+.form-hero { padding: 40rpx 32rpx 32rpx; display: flex; flex-direction: column; align-items: center; }
+.form-hero-emoji { font-size: 80rpx; margin-bottom: 12rpx; }
+.form-hero-title { font-size: 32rpx; font-weight: 700; color: #FFFFFF; }
+.form-body { padding: 24rpx 24rpx 60rpx; }
+.card { background: #FFFFFF; border-radius: 20rpx; padding: 28rpx; margin-bottom: 20rpx; box-shadow: 0 2rpx 12rpx rgba(160,126,255,0.10); }
+.card-section-label { font-size: 24rpx; color: #888888; display: block; margin-bottom: 16rpx; font-weight: 500; }
+.form-row { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
+.form-label { font-size: 28rpx; color: #3D3D3D; font-weight: 500; }
+.divider { height: 1rpx; background: #F5F5F5; margin: 16rpx 0; }
+.picker-row { display: flex; flex-direction: row; align-items: center; justify-content: space-between; flex: 1; margin-left: 16rpx; }
+.picker-value { font-size: 28rpx; color: #3D3D3D; }
+.picker-arrow { font-size: 32rpx; color: #CCCCCC; }
+.form-input { width: 100%; height: 88rpx; background: #F8F8F8; border-radius: 12rpx; padding: 0 20rpx; font-size: 28rpx; color: #3D3D3D; border: 2rpx solid #F0F0F0; }
+.form-textarea { width: 100%; min-height: 120rpx; background: #F8F8F8; border-radius: 12rpx; padding: 20rpx; font-size: 28rpx; color: #3D3D3D; border: 2rpx solid #F0F0F0; line-height: 1.6; }
+.save-btn { margin-top: 12rpx; color: #FFFFFF; border-radius: 999rpx; height: 96rpx; font-size: 32rpx; font-weight: 700; border: none; letter-spacing: 4rpx; width: 100%; }
+.save-btn::after { border: none; }

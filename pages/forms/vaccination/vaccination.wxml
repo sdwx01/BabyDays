@@ -1,0 +1,51 @@
+<scroll-view scroll-y class="form-page">
+  <view class="form-hero" style="background: linear-gradient(135deg, #C8B5FF, #A07EFF);">
+    <text class="form-hero-emoji">💉</text>
+    <text class="form-hero-title">记录疫苗接种</text>
+  </view>
+
+  <view class="form-body">
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">接种日期</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-row"><text class="picker-value">{{date}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+      <view class="divider"></view>
+      <view class="form-row">
+        <text class="form-label">接种时间</text>
+        <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+          <view class="picker-row"><text class="picker-value">{{time}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">疫苗名称</text>
+      <input class="form-input" value="{{vaccineName}}" placeholder="例如：乙肝疫苗第二针..." bindinput="onVaccineNameInput" />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">接种机构</text>
+      <input class="form-input" value="{{clinic}}" placeholder="例如：社区卫生服务中心..." bindinput="onClinicInput" />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">批次号（选填）</text>
+      <input class="form-input" value="{{batchNumber}}" placeholder="疫苗批次号..." bindinput="onBatchInput" />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">接种后反应</text>
+      <textarea class="form-textarea" value="{{reactions}}" placeholder="记录宝宝接种后的反应，如发烧、红肿等..." bindinput="onReactionsInput" auto-height />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">备注（选填）</text>
+      <textarea class="form-textarea" value="{{notes}}" placeholder="其他备注..." bindinput="onNotesInput" auto-height />
+    </view>
+
+    <button class="save-btn" style="background: #A07EFF;" bindtap="onSave">保存记录</button>
+  </view>
+</scroll-view>

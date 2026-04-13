@@ -1,0 +1,32 @@
+<view class="detail-page" wx:if="{{record}}">
+  <!-- Hero -->
+  <view class="detail-hero" style="background: {{cat.bgColor}};">
+    <view class="hero-emoji-wrap" style="background: {{cat.color}}40;">
+      <text class="hero-emoji">{{cat.emoji}}</text>
+    </view>
+    <text class="hero-label">{{cat.label}}</text>
+    <text class="hero-time">{{dateDisplay}} {{timeDisplay}}</text>
+  </view>
+
+  <!-- Fields -->
+  <view class="fields-card">
+    <view
+      class="field-row {{index < fields.length - 1 ? 'field-row-border' : ''}}"
+      wx:for="{{fields}}"
+      wx:key="label"
+    >
+      <text class="field-label">{{item.label}}</text>
+      <text class="field-value">{{item.value}}</text>
+    </view>
+  </view>
+
+  <!-- Logged at -->
+  <view class="meta-row">
+    <text class="meta-text">记录于 {{createdAtDisplay}}</text>
+  </view>
+
+  <!-- Delete button -->
+  <view class="delete-area">
+    <button class="delete-btn" bindtap="onDelete">删除此记录</button>
+  </view>
+</view>

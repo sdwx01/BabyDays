@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "宝宝日记",
+  "usingComponents": {
+    "care-card": "/components/care-card/care-card",
+    "summary-chip": "/components/summary-chip/summary-chip",
+    "section-header": "/components/section-header/section-header"
+  }
+}

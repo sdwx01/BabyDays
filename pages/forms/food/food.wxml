@@ -1,0 +1,64 @@
+<scroll-view scroll-y class="form-page">
+  <view class="form-hero" style="background: linear-gradient(135deg, #FFD5B5, #FFB07C);">
+    <text class="form-hero-emoji">🥕</text>
+    <text class="form-hero-title">记录辅食</text>
+  </view>
+
+  <view class="form-body">
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">日期</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-row"><text class="picker-value">{{date}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+      <view class="divider"></view>
+      <view class="form-row">
+        <text class="form-label">时间</text>
+        <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+          <view class="picker-row"><text class="picker-value">{{time}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">食物名称</text>
+      <input class="form-input" value="{{foodName}}" placeholder="例如：南瓜泥、胡萝卜泥、米糊..." bindinput="onFoodNameInput" />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">喂食量（选填）</text>
+      <input class="form-input" value="{{amount}}" placeholder="例如：2勺、10ml..." bindinput="onAmountInput" />
+    </view>
+
+    <!-- First time switch -->
+    <view class="card">
+      <view class="switch-row">
+        <view>
+          <text class="switch-label">⭐ 第一次尝试</text>
+          <text class="switch-sub">首次尝试这种食物</text>
+        </view>
+        <switch checked="{{isFirstTime}}" bindchange="onFirstTimeChange" color="#FFB07C" />
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">宝宝反应</text>
+        <picker mode="selector" range="{{reactions}}" value="{{reactionIndex}}" bindchange="onReactionChange">
+          <view class="picker-row">
+            <text class="picker-value">{{reactions[reactionIndex]}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">备注（选填）</text>
+      <textarea class="form-textarea" value="{{notes}}" placeholder="添加备注，如制作方法、注意事项..." bindinput="onNotesInput" auto-height />
+    </view>
+
+    <button class="save-btn" style="background: #FFB07C;" bindtap="onSave">保存记录</button>
+  </view>
+</scroll-view>

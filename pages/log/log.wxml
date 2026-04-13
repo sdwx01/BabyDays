@@ -1,0 +1,28 @@
+<view class="log-page">
+  <view class="log-header">
+    <text class="log-title">记录宝宝的每一刻 💕</text>
+    <text class="log-subtitle">点击分类快速记录</text>
+  </view>
+
+  <view class="categories-grid">
+    <view
+      class="cat-tile"
+      wx:for="{{categories}}"
+      wx:key="key"
+      bindtap="onCategoryTap"
+      data-key="{{item.key}}"
+      style="background: {{item.bgColor}};"
+    >
+      <!-- Badge for active state -->
+      <view class="cat-badge" wx:if="{{item.badge}}">
+        <text class="cat-badge-text">{{item.badge}}</text>
+      </view>
+
+      <view class="cat-emoji-wrap" style="background: {{item.color}}40;">
+        <text class="cat-emoji">{{item.emoji}}</text>
+      </view>
+      <text class="cat-label">{{item.label}}</text>
+      <text class="cat-last">{{item.lastAgo}}</text>
+    </view>
+  </view>
+</view>

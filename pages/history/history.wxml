@@ -1,0 +1,54 @@
+<view class="history-page">
+  <!-- Header with date picker -->
+  <view class="history-header">
+    <text class="history-title">历史记录</text>
+    <picker mode="date" value="{{pickerDate}}" bindchange="onPickerChange">
+      <view class="date-picker-btn">
+        <text class="picker-date-text">{{selectedDateDisplay}}</text>
+        <text class="picker-icon">📅</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- Scrollable date chip strip -->
+  <scroll-view scroll-x class="date-chips-row" enhanced="{{true}}" show-scrollbar="{{false}}">
+    <view
+      class="date-chip {{item.isSelected ? 'date-chip-selected' : ''}} {{item.hasDot ? 'date-chip-has-data' : ''}}"
+      wx:for="{{dateChips}}"
+      wx:key="key"
+      bindtap="onDateChipTap"
+      data-key="{{item.key}}"
+    >
+      <text class="date-chip-text">{{item.short}}</text>
+      <view class="date-chip-dot" wx:if="{{item.hasDot}}"></view>
+    </view>
+    <view class="chips-spacer"></view>
+  </scroll-view>
+
+  <!-- Records list -->
+  <scroll-view scroll-y class="records-scroll">
+    <view wx:if="{{isEmpty}}" class="empty-state">
+      <text class="empty-emoji">📭</text>
+      <text class="empty-text">{{selectedDateDisplay}}暂无记录</text>
+    </view>
+
+    <view wx:else class="records-container">
+      <view wx:for="{{grouped}}" wx:key="key" class="category-group">
+        <section-header
+          emoji="{{item.emoji}}"
+          title="{{item.label}}"
+          color="{{item.color}}"
+        />
+        <care-card
+          wx:for="{{item.records}}"
+          wx:for-item="rec"
+          wx:key="id"
+          record="{{rec}}"
+          bind:cardtap="onCardTap"
+        />
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

@@ -1,0 +1,94 @@
+<scroll-view scroll-y class="form-page">
+  <!-- START MODE -->
+  <block wx:if="{{mode === 'start'}}">
+    <view class="form-hero" style="background: linear-gradient(135deg, #B5FFD5, #52D68A);">
+      <text class="form-hero-emoji">🌳</text>
+      <text class="form-hero-title">记录外出</text>
+    </view>
+
+    <view class="form-body">
+      <view class="card">
+        <view class="form-row">
+          <text class="form-label">日期</text>
+          <picker mode="date" value="{{date}}" bindchange="onDateChange">
+            <view class="picker-row">
+              <text class="picker-value">{{date}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+        <view class="divider"></view>
+        <view class="form-row">
+          <text class="form-label">出发时间</text>
+          <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+            <view class="picker-row">
+              <text class="picker-value">{{time}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="card">
+        <text class="card-section-label">目的地</text>
+        <input class="form-input" value="{{destination}}" placeholder="例如：公园、超市..." bindinput="onDestinationInput" />
+      </view>
+
+      <view class="card">
+        <view class="form-row">
+          <text class="form-label">天气</text>
+          <picker mode="selector" range="{{weathers}}" value="{{weatherIndex}}" bindchange="onWeatherChange">
+            <view class="picker-row">
+              <text class="picker-value">{{weathers[weatherIndex]}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="card">
+        <text class="card-section-label">备注（选填）</text>
+        <textarea class="form-textarea" value="{{notes}}" placeholder="添加备注..." bindinput="onNotesInput" auto-height />
+      </view>
+
+      <button class="save-btn" style="background: #52D68A;" bindtap="onStartOuting">出发记录</button>
+    </view>
+  </block>
+
+  <!-- END MODE -->
+  <block wx:else>
+    <view class="form-hero" style="background: linear-gradient(135deg, #B5FFD5, #52D68A);">
+      <text class="form-hero-emoji">🏠</text>
+      <text class="form-hero-title">外出进行中</text>
+      <text class="elapsed-display">{{elapsedDisplay}}</text>
+      <text class="destination-label">{{activeRecord.data.destination}}</text>
+    </view>
+
+    <view class="form-body">
+      <view class="card">
+        <view class="form-row">
+          <text class="form-label">返回日期</text>
+          <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+            <view class="picker-row">
+              <text class="picker-value">{{endDate}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+        <view class="divider"></view>
+        <view class="form-row">
+          <text class="form-label">返回时间</text>
+          <picker mode="time" value="{{endTime}}" bindchange="onEndTimeChange">
+            <view class="picker-row">
+              <text class="picker-value">{{endTime}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <button class="save-btn" style="background: #52D68A;" bindtap="onEndOuting">到家啦</button>
+      <button class="cancel-btn" bindtap="onCancelActive">取消记录</button>
+    </view>
+  </block>
+</scroll-view>

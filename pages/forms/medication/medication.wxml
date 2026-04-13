@@ -1,0 +1,41 @@
+<scroll-view scroll-y class="form-page">
+  <view class="form-hero" style="background: linear-gradient(135deg, #B5D5FF, #7EADFF);">
+    <text class="form-hero-emoji">💊</text>
+    <text class="form-hero-title">记录用药</text>
+  </view>
+
+  <view class="form-body">
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">日期</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-row"><text class="picker-value">{{date}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+      <view class="divider"></view>
+      <view class="form-row">
+        <text class="form-label">时间</text>
+        <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+          <view class="picker-row"><text class="picker-value">{{time}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">药品名称</text>
+      <input class="form-input" value="{{name}}" placeholder="例如：布洛芬、维生素D..." bindinput="onNameInput" />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">剂量</text>
+      <input class="form-input" value="{{dose}}" placeholder="例如：2.5ml、400IU..." bindinput="onDoseInput" />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">备注（选填）</text>
+      <textarea class="form-textarea" value="{{notes}}" placeholder="添加备注，如服药原因、宝宝反应..." bindinput="onNotesInput" auto-height />
+    </view>
+
+    <button class="save-btn" style="background: #7EADFF;" bindtap="onSave">保存记录</button>
+  </view>
+</scroll-view>

@@ -1,0 +1,174 @@
+.page-container {
+  height: 100vh;
+  background: #FFF9F9;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #FF8FAB 0%, #FFB5C8 100%);
+  padding: 48rpx 32rpx 40rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.greeting {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.date-display {
+  font-size: 26rpx;
+  color: rgba(255,255,255,0.85);
+  display: block;
+}
+
+.baby-age {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.75);
+  display: block;
+  margin-top: 4rpx;
+}
+
+/* Active banners */
+.active-banner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20rpx 32rpx;
+  margin: 16rpx 24rpx 0;
+  border-radius: 16rpx;
+}
+
+.sleep-banner {
+  background: #E8F9FF;
+  border: 2rpx solid #B5F0FF;
+}
+
+.outing-banner {
+  background: #EFFFEF;
+  border: 2rpx solid #B5FFD5;
+}
+
+.banner-emoji {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.banner-text {
+  flex: 1;
+  font-size: 26rpx;
+  color: #3D3D3D;
+}
+
+.banner-arrow {
+  font-size: 36rpx;
+  color: #AAAAAA;
+}
+
+/* Chips */
+.chips-row {
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+  padding: 24rpx 24rpx 8rpx;
+}
+
+.chips-end-spacer {
+  width: 8rpx;
+  display: inline-block;
+}
+
+/* Section */
+.section-wrapper {
+  padding: 24rpx 24rpx 0;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.section-title-text {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #3D3D3D;
+}
+
+/* Category grid: 3 columns */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+  margin-bottom: 8rpx;
+}
+
+.category-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx 12rpx 20rpx;
+  border-radius: 20rpx;
+  text-align: center;
+}
+
+.tile-emoji-wrap {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+}
+
+.tile-emoji {
+  font-size: 40rpx;
+}
+
+.tile-label {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #3D3D3D;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.tile-count {
+  font-size: 20rpx;
+  color: #888888;
+  display: block;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 48rpx;
+}
+
+.empty-state-emoji {
+  font-size: 100rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-state-text {
+  font-size: 28rpx;
+  color: #AAAAAA;
+  margin-bottom: 8rpx;
+}
+
+.empty-state-sub {
+  font-size: 24rpx;
+  color: #CCCCCC;
+  text-align: center;
+}
+
+.bottom-spacer {
+  height: 40rpx;
+}

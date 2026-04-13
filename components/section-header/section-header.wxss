@@ -1,0 +1,25 @@
+.section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 16rpx;
+  margin-top: 8rpx;
+}
+
+.header-accent {
+  width: 6rpx;
+  height: 32rpx;
+  border-radius: 3rpx;
+  margin-right: 12rpx;
+}
+
+.header-emoji {
+  font-size: 28rpx;
+  margin-right: 8rpx;
+}
+
+.header-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #3D3D3D;
+}

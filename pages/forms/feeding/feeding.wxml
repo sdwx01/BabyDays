@@ -1,0 +1,81 @@
+<scroll-view scroll-y class="form-page">
+  <!-- Emoji header -->
+  <view class="form-hero" style="background: linear-gradient(135deg, #FFB5C8, #FF8FAB);">
+    <text class="form-hero-emoji">🍼</text>
+    <text class="form-hero-title">记录喂奶</text>
+  </view>
+
+  <view class="form-body">
+    <!-- Date & Time -->
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">日期</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-row">
+            <text class="picker-value">{{date}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+      <view class="divider"></view>
+      <view class="form-row">
+        <text class="form-label">时间</text>
+        <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+          <view class="picker-row">
+            <text class="picker-value">{{time}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- Source -->
+    <view class="card">
+      <text class="card-section-label">喂养方式</text>
+      <picker mode="selector" range="{{sources}}" value="{{sourceIndex}}" bindchange="onSourceChange">
+        <view class="picker-row">
+          <text class="picker-value">{{sources[sourceIndex]}}</text>
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- Amount (bottle) / Duration (breast) -->
+    <view class="card" wx:if="{{isBottle}}">
+      <text class="card-section-label">奶量 (ml)</text>
+      <input
+        class="form-input"
+        type="digit"
+        value="{{amount}}"
+        placeholder="例如：120"
+        bindinput="onAmountInput"
+      />
+    </view>
+
+    <view class="card" wx:else>
+      <text class="card-section-label">哺乳时长 (分钟)</text>
+      <input
+        class="form-input"
+        type="digit"
+        value="{{duration}}"
+        placeholder="例如：15"
+        bindinput="onDurationInput"
+      />
+    </view>
+
+    <!-- Notes -->
+    <view class="card">
+      <text class="card-section-label">备注（选填）</text>
+      <textarea
+        class="form-textarea"
+        value="{{notes}}"
+        placeholder="添加备注..."
+        bindinput="onNotesInput"
+        auto-height
+      />
+    </view>
+
+    <!-- Save button -->
+    <button class="btn-primary save-btn" bindtap="onSave">保存记录</button>
+  </view>
+</scroll-view>

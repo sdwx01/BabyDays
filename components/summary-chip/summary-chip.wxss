@@ -1,0 +1,36 @@
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 28rpx;
+  border-radius: 20rpx;
+  border: 2rpx solid transparent;
+  margin-right: 16rpx;
+  min-width: 160rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.chip-emoji {
+  font-size: 40rpx;
+  margin-bottom: 6rpx;
+}
+
+.chip-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4rpx;
+}
+
+.chip-label {
+  font-size: 22rpx;
+  color: #888888;
+}
+
+.chip-sub {
+  font-size: 20rpx;
+  color: #AAAAAA;
+  margin-top: 4rpx;
+  text-align: center;
+}

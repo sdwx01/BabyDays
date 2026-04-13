@@ -1,0 +1,64 @@
+<scroll-view scroll-y class="form-page">
+  <view class="form-hero" style="background: linear-gradient(135deg, #B5E8FF, #7EC8FF);">
+    <text class="form-hero-emoji">🛁</text>
+    <text class="form-hero-title">记录洗澡</text>
+  </view>
+
+  <view class="form-body">
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">日期</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-row"><text class="picker-value">{{date}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+      <view class="divider"></view>
+      <view class="form-row">
+        <text class="form-label">时间</text>
+        <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+          <view class="picker-row"><text class="picker-value">{{time}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- Water temperature slider -->
+    <view class="card">
+      <view class="temp-header">
+        <text class="card-section-label">水温</text>
+        <text class="temp-value">{{waterTemp}}°C</text>
+      </view>
+      <slider
+        min="30"
+        max="45"
+        step="0.5"
+        value="{{waterTemp}}"
+        activeColor="#7EC8FF"
+        backgroundColor="#F0F0F0"
+        block-size="28"
+        bindchange="onTempChange"
+      />
+      <view class="temp-range-row">
+        <text class="temp-hint">30°C</text>
+        <text class="temp-hint-mid">🌡 适宜: 37-40°C</text>
+        <text class="temp-hint">45°C</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">时长（分钟，选填）</text>
+      <input class="form-input" type="digit" value="{{duration}}" placeholder="例如：10" bindinput="onDurationInput" />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">使用产品（选填）</text>
+      <input class="form-input" value="{{usedProducts}}" placeholder="例如：婴儿沐浴露、洗发水..." bindinput="onProductsInput" />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">备注（选填）</text>
+      <textarea class="form-textarea" value="{{notes}}" placeholder="添加备注..." bindinput="onNotesInput" auto-height />
+    </view>
+
+    <button class="save-btn" style="background: #7EC8FF;" bindtap="onSave">保存记录</button>
+  </view>
+</scroll-view>

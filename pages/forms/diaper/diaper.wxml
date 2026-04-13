@@ -1,0 +1,96 @@
+<scroll-view scroll-y class="form-page">
+  <view class="form-hero" style="background: linear-gradient(135deg, #FFE4B5, #FFCB6B);">
+    <text class="form-hero-emoji">👶</text>
+    <text class="form-hero-title">记录换尿布</text>
+  </view>
+
+  <view class="form-body">
+    <!-- Date & Time -->
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">日期</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-row">
+            <text class="picker-value">{{date}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+      <view class="divider"></view>
+      <view class="form-row">
+        <text class="form-label">时间</text>
+        <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+          <view class="picker-row">
+            <text class="picker-value">{{time}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- Diaper type: large tap targets -->
+    <view class="card">
+      <text class="card-section-label">类型</text>
+      <view class="type-row">
+        <view
+          wx:for="{{diaperTypes}}"
+          wx:key="value"
+          class="type-tile {{diaperType === item.value ? 'type-tile-selected' : ''}}"
+          bindtap="onTypeTap"
+          data-type="{{item.value}}"
+        >
+          <text class="type-emoji">{{item.emoji}}</text>
+          <text class="type-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Bowel fields (only for dirty or both) -->
+    <view class="card" wx:if="{{showBowelFields}}">
+      <view class="form-row" style="margin-bottom: 16rpx;">
+        <text class="form-label">颜色</text>
+        <picker mode="selector" range="{{colors}}" value="{{colorIndex}}" bindchange="onColorChange">
+          <view class="picker-row">
+            <text class="picker-value">{{colors[colorIndex]}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+      <view class="divider"></view>
+      <view class="form-row" style="margin-top: 16rpx;">
+        <text class="form-label">性状</text>
+        <picker mode="selector" range="{{consistencies}}" value="{{consistencyIndex}}" bindchange="onConsistencyChange">
+          <view class="picker-row">
+            <text class="picker-value">{{consistencies[consistencyIndex]}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- Rash -->
+    <view class="card">
+      <view class="switch-row">
+        <view>
+          <text class="switch-label">尿布疹</text>
+          <text class="switch-sub">是否有尿布疹</text>
+        </view>
+        <switch checked="{{hasRash}}" bindchange="onRashChange" color="#FF8FAB" />
+      </view>
+    </view>
+
+    <!-- Notes -->
+    <view class="card">
+      <text class="card-section-label">备注（选填）</text>
+      <textarea
+        class="form-textarea"
+        value="{{notes}}"
+        placeholder="添加备注..."
+        bindinput="onNotesInput"
+        auto-height
+      />
+    </view>
+
+    <button class="save-btn" bindtap="onSave">保存记录</button>
+  </view>
+</scroll-view>

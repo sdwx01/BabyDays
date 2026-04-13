@@ -1,0 +1,18 @@
+<view class="care-card" bindtap="onTap" wx:if="{{record}}">
+  <!-- Left accent stripe -->
+  <view class="accent-stripe" style="background: {{cat.color}};"></view>
+
+  <!-- Content -->
+  <view class="card-content">
+    <!-- Left: emoji + summary -->
+    <view class="card-left">
+      <view class="card-emoji" style="background: {{cat.bgColor}};">{{cat.emoji}}</view>
+      <view class="card-info">
+        <text class="card-label">{{cat.label}}</text>
+        <text class="card-summary">{{summary}}</text>
+      </view>
+    </view>
+    <!-- Right: time -->
+    <text class="card-time">{{timeLabel}}</text>
+  </view>
+</view>

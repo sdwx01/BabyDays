@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/log/log",
+    "pages/history/history",
+    "pages/forms/feeding/feeding",
+    "pages/forms/medication/medication",
+    "pages/forms/vaccination/vaccination",
+    "pages/forms/diaper/diaper",
+    "pages/forms/sleep/sleep",
+    "pages/forms/outing/outing",
+    "pages/forms/bath/bath",
+    "pages/forms/food/food",
+    "pages/forms/milestone/milestone",
+    "pages/detail/detail"
+  ],
+  "tabBar": {
+    "color": "#888888",
+    "selectedColor": "#FF8FAB",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "今日"
+      },
+      {
+        "pagePath": "pages/log/log",
+        "text": "记录"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "历史"
+      }
+    ]
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FF8FAB",
+    "navigationBarTitleText": "宝宝日记",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FFF9F9"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

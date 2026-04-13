@@ -1,0 +1,62 @@
+<scroll-view scroll-y class="form-page">
+  <view class="form-hero" style="background: linear-gradient(135deg, #FFF4B5, #FFD700);">
+    <text class="form-hero-emoji">⭐</text>
+    <text class="form-hero-title">记录里程碑</text>
+    <text class="form-hero-sub">记录宝宝每一个珍贵的第一次</text>
+  </view>
+
+  <view class="form-body">
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">里程碑日期</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-row"><text class="picker-value">{{date}}</text><text class="picker-arrow">›</text></view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="form-row">
+        <text class="form-label">类型</text>
+        <picker mode="selector" range="{{types}}" value="{{typeIndex}}" bindchange="onTypeChange">
+          <view class="picker-row">
+            <text class="picker-value">{{types[typeIndex]}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">里程碑名称</text>
+      <input class="form-input" value="{{title}}" placeholder="例如：第一次翻身、第一次微笑..." bindinput="onTitleInput" />
+
+      <!-- Quick suggestions -->
+      <text class="suggestion-label">快速选择</text>
+      <scroll-view scroll-x class="suggestions-row" show-scrollbar="{{false}}">
+        <view
+          class="suggestion-chip {{title === item ? 'suggestion-chip-active' : ''}}"
+          wx:for="{{suggestions}}"
+          wx:key="*this"
+          bindtap="onSuggestionTap"
+          data-text="{{item}}"
+        >
+          <text class="suggestion-text">{{item}}</text>
+        </view>
+        <view style="width: 8rpx; display: inline-block;"></view>
+      </scroll-view>
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">详细描述（选填）</text>
+      <textarea class="form-textarea" value="{{description}}" placeholder="描述这个美好的时刻..." bindinput="onDescriptionInput" auto-height />
+    </view>
+
+    <view class="card">
+      <text class="card-section-label">📷 照片备注（选填）</text>
+      <input class="form-input" value="{{photoNote}}" placeholder="照片位置或描述..." bindinput="onPhotoNoteInput" />
+    </view>
+
+    <button class="save-btn" bindtap="onSave">保存里程碑</button>
+  </view>
+</scroll-view>

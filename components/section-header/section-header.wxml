@@ -1,0 +1,5 @@
+<view class="section-header">
+  <view class="header-accent" style="background: {{color}};"></view>
+  <text class="header-emoji">{{emoji}}</text>
+  <text class="header-title">{{title}}</text>
+</view>

@@ -1,0 +1,73 @@
+.care-card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  margin-bottom: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+.accent-stripe {
+  width: 8rpx;
+  flex-shrink: 0;
+}
+
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 24rpx;
+}
+
+.card-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  overflow: hidden;
+}
+
+.card-emoji {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 18rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+
+.card-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.card-label {
+  font-size: 22rpx;
+  color: #888888;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.card-summary {
+  font-size: 28rpx;
+  color: #3D3D3D;
+  font-weight: 500;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-time {
+  font-size: 24rpx;
+  color: #AAAAAA;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}

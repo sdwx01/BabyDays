@@ -1,0 +1,6 @@
+<view class="chip" style="background: {{bgColor}}; border-color: {{color}};">
+  <text class="chip-emoji">{{emoji}}</text>
+  <text class="chip-value" style="color: {{color}};">{{value}}</text>
+  <text class="chip-label">{{label}}</text>
+  <text class="chip-sub" wx:if="{{subtext}}">{{subtext}}</text>
+</view>

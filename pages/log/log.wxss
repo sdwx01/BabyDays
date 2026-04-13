@@ -1,0 +1,87 @@
+.log-page {
+  min-height: 100vh;
+  background: #FFF9F9;
+  padding: 0 0 40rpx;
+}
+
+.log-header {
+  padding: 40rpx 32rpx 24rpx;
+  background: linear-gradient(135deg, #FF8FAB 0%, #FFB5C8 100%);
+}
+
+.log-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.log-subtitle {
+  font-size: 26rpx;
+  color: rgba(255,255,255,0.80);
+  display: block;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+  padding: 28rpx 24rpx;
+}
+
+.cat-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx 12rpx 24rpx;
+  border-radius: 24rpx;
+  position: relative;
+  min-height: 220rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.cat-badge {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  background: #FF8FAB;
+  border-radius: 999rpx;
+  padding: 4rpx 10rpx;
+}
+
+.cat-badge-text {
+  font-size: 18rpx;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.cat-emoji-wrap {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+
+.cat-emoji {
+  font-size: 48rpx;
+}
+
+.cat-label {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #3D3D3D;
+  display: block;
+  margin-bottom: 6rpx;
+}
+
+.cat-last {
+  font-size: 20rpx;
+  color: #888888;
+  display: block;
+  text-align: center;
+}

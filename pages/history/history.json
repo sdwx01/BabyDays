@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "历史记录",
+  "usingComponents": {
+    "care-card": "/components/care-card/care-card",
+    "section-header": "/components/section-header/section-header"
+  }
+}
