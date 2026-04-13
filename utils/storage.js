@@ -1,4 +1,9 @@
 // All wx.Storage* operations for BabyDays
+// Cloud sync: every write (add/update/delete) also fires an async cloud push
+// via cloud.js. The local write is always synchronous and completes first so
+// the UI is never blocked. Cloud failures are silently ignored (offline-safe).
+
+const cloud = require('./cloud');
 
 /**
  * Generates a unique ID for records
@@ -24,23 +29,39 @@ function getRecordsByDate(dateKey) {
 /**
  * Saves a new record. Handles day index maintenance.
  * record must have: { id, type, createdAt, recordedAt, dateKey, data }
+ * Automatically attaches creatorName from user_meta.
+ * Fire-and-forget cloud push runs in the background.
  */
 function addRecord(record) {
+  // Attach creator info (used to show "who logged this" in multi-caregiver mode)
+  if (!record.creatorName) {
+    try {
+      const userMeta = wx.getStorageSync('user_meta') || {};
+      record.creatorName = userMeta.nickname || '家长';
+    } catch (e) {}
+  }
+
   try {
     const dateKey = record.dateKey;
     const records = getRecordsByDate(dateKey);
     records.push(record);
     wx.setStorageSync(`records_${dateKey}`, records);
     _ensureDateInIndex(dateKey);
-    return true;
   } catch (e) {
     console.error('[storage] addRecord error:', e);
     return false;
   }
+
+  // Cloud push (async, fire-and-forget — failure is silently ignored)
+  if (cloud.isAvailable()) {
+    cloud.addRecord(record).catch(() => {});
+  }
+  return true;
 }
 
 /**
- * Updates the data field of an existing record by id
+ * Updates the data field of an existing record by id.
+ * Fire-and-forget cloud update runs in the background.
  */
 function updateRecord(id, dateKey, updatedData) {
   try {
@@ -49,26 +70,35 @@ function updateRecord(id, dateKey, updatedData) {
     if (idx === -1) return false;
     records[idx].data = Object.assign({}, records[idx].data, updatedData);
     wx.setStorageSync(`records_${dateKey}`, records);
-    return true;
   } catch (e) {
     console.error('[storage] updateRecord error:', e);
     return false;
   }
+
+  if (cloud.isAvailable()) {
+    cloud.updateRecord(id, updatedData).catch(() => {});
+  }
+  return true;
 }
 
 /**
- * Deletes a record by id from a specific date
+ * Deletes a record by id from a specific date.
+ * Fire-and-forget cloud delete runs in the background.
  */
 function deleteRecord(id, dateKey) {
   try {
     const records = getRecordsByDate(dateKey);
     const filtered = records.filter(r => r.id !== id);
     wx.setStorageSync(`records_${dateKey}`, filtered);
-    return true;
   } catch (e) {
     console.error('[storage] deleteRecord error:', e);
     return false;
   }
+
+  if (cloud.isAvailable()) {
+    cloud.deleteRecord(id).catch(() => {});
+  }
+  return true;
 }
 
 /**

@@ -1,0 +1,102 @@
+<view class="ob-page">
+
+  <!-- ── STEP: CHOOSE ──────────────────────────────────────────────────── -->
+  <block wx:if="{{step === 'choose'}}">
+    <view class="ob-hero">
+      <text class="ob-hero-emoji">👶</text>
+      <text class="ob-hero-title">欢迎使用宝宝日记</text>
+      <text class="ob-hero-sub">记录每一个珍贵时刻，与家人共同守护</text>
+    </view>
+
+    <view class="ob-body">
+      <view class="ob-choice-card" bindtap="goCreate">
+        <text class="ob-choice-emoji">🏠</text>
+        <view class="ob-choice-text">
+          <text class="ob-choice-title">创建家庭</text>
+          <text class="ob-choice-desc">我是第一个开始记录的，设置宝宝信息</text>
+        </view>
+        <text class="ob-choice-arrow">›</text>
+      </view>
+
+      <view class="ob-choice-card" bindtap="goJoin">
+        <text class="ob-choice-emoji">🔗</text>
+        <view class="ob-choice-text">
+          <text class="ob-choice-title">加入家庭</text>
+          <text class="ob-choice-desc">家人已经创建，我用邀请码加入</text>
+        </view>
+        <text class="ob-choice-arrow">›</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- ── STEP: CREATE ──────────────────────────────────────────────────── -->
+  <block wx:if="{{step === 'create'}}">
+    <view class="ob-hero ob-hero-sm">
+      <text class="ob-hero-emoji">🏠</text>
+      <text class="ob-hero-title">创建宝宝家庭</text>
+    </view>
+
+    <view class="ob-body">
+      <view class="ob-card">
+        <text class="ob-field-label">宝宝的名字或昵称</text>
+        <input class="ob-input" value="{{babyName}}" placeholder="例如：小团子、豆豆..." bindinput="onBabyNameInput" maxlength="10" />
+      </view>
+
+      <view class="ob-card">
+        <view class="ob-row">
+          <text class="ob-field-label" style="margin-bottom:0;">出生日期（选填）</text>
+          <picker mode="date" value="{{birthDate}}" bindchange="onBirthDateChange">
+            <view class="ob-picker-row">
+              <text class="ob-picker-val">{{birthDate || '点击选择'}}</text>
+              <text class="ob-picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="ob-card">
+        <text class="ob-field-label">你的昵称（在记录中显示）</text>
+        <input class="ob-input" value="{{nickname}}" placeholder="例如：妈妈、爸爸、奶奶..." bindinput="onNicknameInput" maxlength="8" />
+      </view>
+
+      <button class="ob-btn-primary" bindtap="onCreateFamily" disabled="{{loading}}">
+        {{loading ? '创建中...' : '创建家庭'}}
+      </button>
+      <button class="ob-btn-secondary" bindtap="goBack">返回</button>
+    </view>
+  </block>
+
+  <!-- ── STEP: JOIN ────────────────────────────────────────────────────── -->
+  <block wx:if="{{step === 'join'}}">
+    <view class="ob-hero ob-hero-sm">
+      <text class="ob-hero-emoji">🔗</text>
+      <text class="ob-hero-title">加入家庭</text>
+    </view>
+
+    <view class="ob-body">
+      <view class="ob-card">
+        <text class="ob-field-label">邀请码（6位）</text>
+        <input
+          class="ob-input ob-input-code"
+          value="{{inviteCode}}"
+          placeholder="请输入邀请码"
+          bindinput="onInviteCodeInput"
+          maxlength="6"
+          type="text"
+        />
+        <text class="ob-hint">邀请码可在家庭管理页面查看，字母不区分大小写</text>
+      </view>
+
+      <view class="ob-card">
+        <text class="ob-field-label">你的昵称（在记录中显示）</text>
+        <input class="ob-input" value="{{joinNickname}}" placeholder="例如：妈妈、爸爸、奶奶..." bindinput="onJoinNicknameInput" maxlength="8" />
+      </view>
+
+      <button class="ob-btn-primary" bindtap="onJoinFamily" disabled="{{loading}}">
+        {{loading ? '加入中...' : '加入家庭'}}
+      </button>
+      <button class="ob-btn-secondary" bindtap="goBack">返回</button>
+    </view>
+  </block>
+
+</view>

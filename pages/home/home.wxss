@@ -33,6 +33,24 @@
   margin-top: 4rpx;
 }
 
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.family-icon {
+  font-size: 44rpx;
+}
+
+.sync-dot {
+  font-size: 22rpx;
+  color: rgba(255,255,255,0.80);
+  margin-top: 4rpx;
+}
+
 /* Active banners */
 .active-banner {
   display: flex;

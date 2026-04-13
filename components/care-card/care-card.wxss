@@ -65,6 +65,13 @@
   white-space: nowrap;
 }
 
+.card-creator {
+  font-size: 20rpx;
+  color: #CCCCCC;
+  display: block;
+  margin-top: 4rpx;
+}
+
 .card-time {
   font-size: 24rpx;
   color: #AAAAAA;

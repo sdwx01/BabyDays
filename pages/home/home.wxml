@@ -6,6 +6,10 @@
       <text class="date-display">{{dateDisplay}}</text>
       <text class="baby-age" wx:if="{{babyAge}}">宝宝 {{babyAge}} 了</text>
     </view>
+    <view class="hero-right" bindtap="goToFamily">
+      <text class="family-icon">👨‍👩‍👧</text>
+      <text class="sync-dot" wx:if="{{isSyncing}}">↻</text>
+    </view>
   </view>
 
   <!-- Active state banners -->

@@ -1,0 +1,9 @@
+{
+  "name": "generateInviteCode",
+  "version": "1.0.0",
+  "description": "Regenerates invite code for a BabyDays family",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

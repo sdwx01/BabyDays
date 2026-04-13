@@ -1,6 +1,7 @@
-const storage = require('../../utils/storage');
-const datetime = require('../../utils/datetime');
+const storage  = require('../../utils/storage');
+const datetime  = require('../../utils/datetime');
 const constants = require('../../utils/constants');
+const cloud     = require('../../utils/cloud');
 
 Page({
   data: {
@@ -18,6 +19,15 @@ Page({
     const currentSelected = this.data.selectedDate || today;
     this._buildDateChips();
     this._loadDate(currentSelected);
+    // Pull from cloud for the selected date; re-render if new records arrive
+    if (cloud.isAvailable()) {
+      cloud.syncDateFromCloud(currentSelected).then(merged => {
+        if (merged) {
+          this._buildDateChips();
+          this._loadDate(currentSelected);
+        }
+      }).catch(() => {});
+    }
   },
 
   _buildDateChips() {

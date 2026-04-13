@@ -12,7 +12,9 @@
     "pages/forms/bath/bath",
     "pages/forms/food/food",
     "pages/forms/milestone/milestone",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/onboarding/onboarding",
+    "pages/family/family"
   ],
   "tabBar": {
     "color": "#888888",

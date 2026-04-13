@@ -1,0 +1,74 @@
+<scroll-view scroll-y class="family-page">
+
+  <!-- Baby profile card -->
+  <view class="baby-card">
+    <view class="baby-avatar">
+      <text class="baby-avatar-emoji">👶</text>
+    </view>
+    <view class="baby-info">
+      <text class="baby-name">{{babyName}}</text>
+      <text class="baby-age" wx:if="{{babyAge}}">{{babyAge}}</text>
+      <text class="baby-birth" wx:if="{{birthDate}}">{{birthDate}}</text>
+    </view>
+  </view>
+
+  <!-- Cloud sync status -->
+  <view class="section-card" wx:if="{{!cloudLinked}}">
+    <view class="no-cloud-row">
+      <text class="no-cloud-emoji">☁️</text>
+      <view>
+        <text class="no-cloud-title">未开启云同步</text>
+        <text class="no-cloud-sub">数据仅保存在本机</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Invite code -->
+  <view class="section-card" wx:if="{{cloudLinked}}">
+    <text class="section-label">邀请其他家长</text>
+    <view class="invite-code-box" bindtap="onCopyCode">
+      <text class="invite-code">{{inviteCode || (loading ? '加载中...' : '暂无')}}</text>
+      <text class="copy-hint">点击复制</text>
+    </view>
+    <text class="invite-desc">将此邀请码发给家人，他们在「加入家庭」页面输入即可共享记录</text>
+    <view class="refresh-row" bindtap="onRefreshCode">
+      <text class="refresh-text">🔄 刷新邀请码（旧码立即失效）</text>
+    </view>
+  </view>
+
+  <!-- Members list -->
+  <view class="section-card" wx:if="{{members.length > 0}}">
+    <text class="section-label">家庭成员</text>
+    <view class="member-row" wx:for="{{members}}" wx:key="nickname">
+      <view class="member-avatar">
+        <text class="member-avatar-text">{{item.nickname[0]}}</text>
+      </view>
+      <view class="member-info">
+        <text class="member-name">{{item.nickname}}</text>
+        <text class="member-join">{{item.joinedAt}}</text>
+      </view>
+      <text class="member-role">{{item.role}}</text>
+    </view>
+  </view>
+
+  <!-- My settings -->
+  <view class="section-card">
+    <text class="section-label">我的设置</text>
+    <view class="setting-row" bindtap="onEditNickname">
+      <text class="setting-label">我的昵称</text>
+      <view class="setting-right">
+        <text class="setting-value">{{myNickname}}</text>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Leave family -->
+  <view class="section-card" wx:if="{{cloudLinked}}">
+    <view class="leave-row" bindtap="onLeaveFamily">
+      <text class="leave-text">退出此家庭</text>
+    </view>
+  </view>
+
+  <view class="bottom-spacer"></view>
+</scroll-view>

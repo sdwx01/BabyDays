@@ -1,6 +1,7 @@
-const storage = require('../../utils/storage');
-const datetime = require('../../utils/datetime');
+const storage  = require('../../utils/storage');
+const datetime  = require('../../utils/datetime');
 const constants = require('../../utils/constants');
+const cloud     = require('../../utils/cloud');
 
 Page({
   data: {
@@ -13,11 +14,30 @@ Page({
     todayRecords: [],
     isEmpty: true,
     activeSleep: null,
-    activeOuting: null
+    activeOuting: null,
+    isSyncing: false
   },
 
   onShow() {
+    // Gate: redirect to onboarding on first launch
+    const app = getApp();
+    if (app.globalData.needsOnboarding) {
+      wx.navigateTo({ url: '/pages/onboarding/onboarding' });
+      return;
+    }
+
     this._refresh();
+    this._syncFromCloud();
+  },
+
+  /** Pulls today's records from cloud, then re-renders if new data arrived */
+  _syncFromCloud() {
+    if (!cloud.isAvailable()) return;
+    this.setData({ isSyncing: true });
+    cloud.syncDateFromCloud(datetime.todayKey()).then(merged => {
+      this.setData({ isSyncing: false });
+      if (merged) this._refresh();  // new records came in from another caregiver
+    }).catch(() => this.setData({ isSyncing: false }));
   },
 
   _refresh() {
@@ -143,5 +163,9 @@ Page({
 
   goToOuting() {
     wx.navigateTo({ url: '/pages/forms/outing/outing' });
+  },
+
+  goToFamily() {
+    wx.navigateTo({ url: '/pages/family/family' });
   }
 });

@@ -10,6 +10,7 @@
       <view class="card-info">
         <text class="card-label">{{cat.label}}</text>
         <text class="card-summary">{{summary}}</text>
+        <text class="card-creator" wx:if="{{record.creatorName}}">{{record.creatorName}}</text>
       </view>
     </view>
     <!-- Right: time -->
