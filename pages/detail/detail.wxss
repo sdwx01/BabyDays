@@ -78,6 +78,37 @@
   word-break: break-all;
 }
 
+/* Photos */
+.photos-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  margin: 0 24rpx 20rpx;
+  padding: 24rpx 28rpx;
+  box-shadow: 0 2rpx 16rpx rgba(255, 143, 171, 0.08);
+}
+
+.photos-title {
+  font-size: 26rpx;
+  color: #888888;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.photos-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.photo-thumb {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 12rpx;
+  display: block;
+}
+
 /* Meta */
 .meta-row {
   padding: 0 28rpx 8rpx;

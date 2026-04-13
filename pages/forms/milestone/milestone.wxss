@@ -24,11 +24,77 @@
   background: #F5F5F5; border-radius: 999rpx;
   margin-right: 12rpx; border: 2rpx solid #EEEEEE;
 }
-.suggestion-chip-active {
-  background: #FFF9E0; border-color: #FFD700;
-}
+.suggestion-chip-active { background: #FFF9E0; border-color: #FFD700; }
 .suggestion-text { font-size: 24rpx; color: #555555; white-space: nowrap; }
 .suggestion-chip-active .suggestion-text { color: #B8860B; font-weight: 600; }
 
+/* Photo grid */
+.photo-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.photo-item {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.photo-thumb {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.photo-remove {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 999rpx;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-remove-text {
+  font-size: 22rpx;
+  color: #FFFFFF;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.photo-add {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 16rpx;
+  border: 3rpx dashed #DDDDDD;
+  background: #FAFAFA;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-add-icon {
+  font-size: 60rpx;
+  color: #CCCCCC;
+  line-height: 1;
+  margin-bottom: 8rpx;
+}
+
+.photo-add-text {
+  font-size: 22rpx;
+  color: #BBBBBB;
+}
+
+/* Save button */
 .save-btn { margin-top: 12rpx; background: #FFD700; color: #7D6000; border-radius: 999rpx; height: 96rpx; font-size: 32rpx; font-weight: 700; border: none; letter-spacing: 4rpx; width: 100%; }
 .save-btn::after { border: none; }
+.save-btn[disabled] { opacity: 0.6; }

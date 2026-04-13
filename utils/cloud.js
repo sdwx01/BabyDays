@@ -266,6 +266,20 @@ async function migrateLocalToCloud() {
   }
 }
 
+/**
+ * Uploads a local file to WeChat Cloud Storage.
+ * Returns the cloud fileID on success, or null on failure.
+ */
+async function uploadFile(filePath, cloudPath) {
+  try {
+    const res = await wx.cloud.uploadFile({ cloudPath, filePath });
+    return res.fileID;
+  } catch (e) {
+    console.error('[cloud] uploadFile error:', e);
+    return null;
+  }
+}
+
 module.exports = {
   isAvailable,
   addRecord,
@@ -277,5 +291,6 @@ module.exports = {
   getFamilyInfo,
   getFamilyMembers,
   regenerateInviteCode,
-  migrateLocalToCloud
+  migrateLocalToCloud,
+  uploadFile
 };

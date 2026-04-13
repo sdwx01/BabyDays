@@ -7,6 +7,7 @@ Page({
     record: null,
     cat: null,
     fields: [],
+    photos: [],
     timeDisplay: '',
     dateDisplay: ''
   },
@@ -25,10 +26,15 @@ Page({
     const cat = constants.CATEGORY_MAP[record.type] || { label: record.type, emoji: '📝', color: '#E0E0E0', bgColor: '#F5F5F5' };
     const fields = this._buildFields(record);
 
+    const photos = (record.type === 'milestone' && record.data.photos && record.data.photos.length > 0)
+      ? record.data.photos
+      : [];
+
     this.setData({
       record,
       cat,
       fields,
+      photos,
       timeDisplay: datetime.formatTime(record.recordedAt),
       dateDisplay: datetime.dateKeyToDisplay(record.dateKey),
       createdAtDisplay: datetime.formatDateTime(record.createdAt)
@@ -115,11 +121,15 @@ Page({
         add('类型', d.milestoneType);
         add('里程碑名称', d.title);
         add('详细描述', d.description);
-        add('照片备注', d.photoNote);
         break;
     }
 
     return fields;
+  },
+
+  onPreviewPhoto(e) {
+    const current = e.currentTarget.dataset.src;
+    wx.previewImage({ current, urls: this.data.photos });
   },
 
   onDelete() {

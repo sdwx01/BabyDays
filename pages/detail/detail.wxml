@@ -20,6 +20,22 @@
     </view>
   </view>
 
+  <!-- Photos (milestone only) -->
+  <view class="photos-card" wx:if="{{photos.length > 0}}">
+    <text class="photos-title">📷 照片</text>
+    <view class="photos-grid">
+      <image
+        class="photo-thumb"
+        wx:for="{{photos}}"
+        wx:key="*this"
+        src="{{item}}"
+        mode="aspectFill"
+        bindtap="onPreviewPhoto"
+        data-src="{{item}}"
+      />
+    </view>
+  </view>
+
   <!-- Logged at -->
   <view class="meta-row">
     <text class="meta-text">记录于 {{createdAtDisplay}}</text>

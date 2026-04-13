@@ -31,7 +31,6 @@
       <text class="card-section-label">里程碑名称</text>
       <input class="form-input" value="{{title}}" placeholder="例如：第一次翻身、第一次微笑..." bindinput="onTitleInput" />
 
-      <!-- Quick suggestions -->
       <text class="suggestion-label">快速选择</text>
       <scroll-view scroll-x class="suggestions-row" show-scrollbar="{{false}}">
         <view
@@ -52,11 +51,33 @@
       <textarea class="form-textarea" value="{{description}}" placeholder="描述这个美好的时刻..." bindinput="onDescriptionInput" auto-height />
     </view>
 
+    <!-- Photo picker -->
     <view class="card">
-      <text class="card-section-label">📷 照片备注（选填）</text>
-      <input class="form-input" value="{{photoNote}}" placeholder="照片位置或描述..." bindinput="onPhotoNoteInput" />
+      <text class="card-section-label">📷 照片（选填，最多9张）</text>
+      <view class="photo-grid">
+        <!-- Existing photos -->
+        <view class="photo-item" wx:for="{{photos}}" wx:key="*this">
+          <image
+            class="photo-thumb"
+            src="{{item}}"
+            mode="aspectFill"
+            bindtap="onPreviewPhoto"
+            data-src="{{item}}"
+          />
+          <view class="photo-remove" catchtap="onRemovePhoto" data-index="{{index}}">
+            <text class="photo-remove-text">✕</text>
+          </view>
+        </view>
+        <!-- Add button -->
+        <view class="photo-add" wx:if="{{photos.length < 9}}" bindtap="onChoosePhoto">
+          <text class="photo-add-icon">+</text>
+          <text class="photo-add-text">添加照片</text>
+        </view>
+      </view>
     </view>
 
-    <button class="save-btn" bindtap="onSave">保存里程碑</button>
+    <button class="save-btn" bindtap="onSave" disabled="{{uploading}}">
+      {{uploading ? '上传中...' : '保存里程碑'}}
+    </button>
   </view>
 </scroll-view>
