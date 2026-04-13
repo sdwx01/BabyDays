@@ -12,6 +12,19 @@
     </view>
   </view>
 
+  <!-- Sync error banner -->
+  <view class="sync-error-banner" wx:if="{{syncError}}" bindtap="onRetrySync">
+    <text class="banner-emoji">⚠️</text>
+    <text class="banner-text">云端同步失败，点击重试</text>
+    <text class="banner-arrow">↻</text>
+  </view>
+
+  <!-- Pending sync badge (records waiting to push to cloud) -->
+  <view class="pending-banner" wx:if="{{pendingCount > 0}}">
+    <text class="banner-emoji">☁️</text>
+    <text class="banner-text">{{pendingCount}} 条记录等待同步</text>
+  </view>
+
   <!-- Active state banners -->
   <view class="active-banner sleep-banner" wx:if="{{activeSleep}}" bindtap="goToSleep">
     <text class="banner-emoji">😴</text>
@@ -39,6 +52,11 @@
     <view class="chips-end-spacer"></view>
   </scroll-view>
 
+  <!-- Loading skeleton (first-run only) -->
+  <view class="section-wrapper" wx:if="{{isLoading && isEmpty}}">
+    <view class="skeleton-card" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
+  </view>
+
   <!-- Today's timeline -->
   <view class="section-wrapper" wx:if="{{!isEmpty}}">
     <section-header emoji="📋" title="今日记录" color="#FF8FAB" />
@@ -51,7 +69,7 @@
   </view>
 
   <!-- Empty state -->
-  <view class="empty-state" wx:if="{{isEmpty}}">
+  <view class="empty-state" wx:if="{{isEmpty && !isLoading}}">
     <text class="empty-state-emoji">🌸</text>
     <text class="empty-state-text">今日暂无记录</text>
     <text class="empty-state-sub">点击下方「记录」标签，开始记录宝宝的每一刻</text>

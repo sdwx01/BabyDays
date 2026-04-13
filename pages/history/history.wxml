@@ -25,9 +25,20 @@
     <view class="chips-spacer"></view>
   </scroll-view>
 
+  <!-- Sync error banner -->
+  <view class="sync-error-banner" wx:if="{{syncError}}" bindtap="onRetrySync">
+    <text class="err-emoji">⚠️</text>
+    <text class="err-text">云端同步失败，点击重试</text>
+    <text class="err-arrow">↻</text>
+  </view>
+
   <!-- Records list -->
   <scroll-view scroll-y class="records-scroll">
-    <view wx:if="{{isEmpty}}" class="empty-state">
+    <view wx:if="{{isLoading && isEmpty}}" class="records-container">
+      <view class="skeleton-card" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
+    </view>
+
+    <view wx:if="{{isEmpty && !isLoading}}" class="empty-state">
       <text class="empty-emoji">📭</text>
       <text class="empty-text">{{selectedDateDisplay}}暂无记录</text>
     </view>

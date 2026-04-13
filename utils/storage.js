@@ -52,9 +52,16 @@ function addRecord(record) {
     return false;
   }
 
-  // Cloud push (async, fire-and-forget — failure is silently ignored)
+  // Cloud push — enqueue for retry on failure so records aren't lost offline.
   if (cloud.isAvailable()) {
-    cloud.addRecord(record).catch(() => {});
+    cloud.addRecord(record).then(ok => {
+      if (!ok) cloud.enqueuePending('add', record.id, record.dateKey, record);
+    }).catch(() => {
+      cloud.enqueuePending('add', record.id, record.dateKey, record);
+    });
+  } else {
+    // Offline / not joined to a family yet — queue for later.
+    cloud.enqueuePending('add', record.id, record.dateKey, record);
   }
   return true;
 }
@@ -76,7 +83,13 @@ function updateRecord(id, dateKey, updatedData) {
   }
 
   if (cloud.isAvailable()) {
-    cloud.updateRecord(id, updatedData).catch(() => {});
+    cloud.updateRecord(id, updatedData, dateKey).then(ok => {
+      if (!ok) cloud.enqueuePending('update', id, dateKey, updatedData);
+    }).catch(() => {
+      cloud.enqueuePending('update', id, dateKey, updatedData);
+    });
+  } else {
+    cloud.enqueuePending('update', id, dateKey, updatedData);
   }
   return true;
 }
@@ -96,7 +109,13 @@ function deleteRecord(id, dateKey) {
   }
 
   if (cloud.isAvailable()) {
-    cloud.deleteRecord(id).catch(() => {});
+    cloud.deleteRecord(id, dateKey).then(ok => {
+      if (!ok) cloud.enqueuePending('delete', id, dateKey, null);
+    }).catch(() => {
+      cloud.enqueuePending('delete', id, dateKey, null);
+    });
+  } else {
+    cloud.enqueuePending('delete', id, dateKey, null);
   }
   return true;
 }

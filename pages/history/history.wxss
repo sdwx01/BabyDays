@@ -102,6 +102,35 @@
   margin-bottom: 24rpx;
 }
 
+/* Sync error banner */
+.sync-error-banner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20rpx 32rpx;
+  margin: 16rpx 24rpx 0;
+  border-radius: 16rpx;
+  background: #FFF2E8;
+  border: 2rpx solid #FFD1A3;
+}
+.err-emoji { font-size: 32rpx; margin-right: 12rpx; }
+.err-text  { flex: 1; font-size: 26rpx; color: #3D3D3D; }
+.err-arrow { font-size: 32rpx; color: #AAAAAA; }
+
+/* Skeleton */
+.skeleton-card {
+  height: 120rpx;
+  margin-bottom: 16rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(90deg, #F5F5F5 0%, #ECECEC 50%, #F5F5F5 100%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+@keyframes skeleton-pulse {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
 /* Empty */
 .empty-state {
   display: flex;
