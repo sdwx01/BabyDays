@@ -14,8 +14,17 @@ Page({
     isEmpty: true,
     activeSleep: null,
     activeOuting: null,
-    isSyncing: false
+    isSyncing: false,
+    isLoading: true,
+    syncError: false,
+    pendingCount: 0
   },
+
+  // Memoization: skip _computeStats + _buildChips when the input hasn't changed.
+  // Keyed on (dateKey, records length, latest recordedAt). Cheap to compare,
+  // sufficient because every mutation changes length or latest timestamp.
+  _statsCacheKey: '',
+  _statsCache: null,
 
   onShow() {
     // Gate: redirect to onboarding on first launch
@@ -29,14 +38,31 @@ Page({
     this._syncFromCloud();
   },
 
+  onPullDownRefresh() {
+    this._syncFromCloud(true).finally(() => wx.stopPullDownRefresh());
+  },
+
   /** Pulls today's records from cloud, then re-renders if new data arrived */
-  _syncFromCloud() {
-    if (!cloud.isAvailable()) return;
-    this.setData({ isSyncing: true });
-    cloud.syncDateFromCloud(datetime.todayKey()).then(merged => {
-      this.setData({ isSyncing: false });
-      if (merged) this._refresh();  // new records came in from another caregiver
-    }).catch(() => this.setData({ isSyncing: false }));
+  _syncFromCloud(force) {
+    if (!cloud.isAvailable()) {
+      this.setData({ isLoading: false });
+      return Promise.resolve();
+    }
+    this.setData({ isSyncing: true, syncError: false });
+    return cloud.syncDateFromCloud(datetime.todayKey(), { force: !!force }).then(res => {
+      this.setData({ isSyncing: false, isLoading: false });
+      if (res.ok && res.merged) {
+        this._refresh();  // new records came in from another caregiver
+      } else if (!res.ok && res.error === cloud.SYNC_ERR_NETWORK) {
+        this.setData({ syncError: true });
+      }
+    }).catch(() => {
+      this.setData({ isSyncing: false, isLoading: false, syncError: true });
+    });
+  },
+
+  onRetrySync() {
+    this._syncFromCloud(true);
   },
 
   _refresh() {
@@ -44,11 +70,25 @@ Page({
     const today = datetime.todayKey();
     const records = storage.getRecordsByDate(today);
 
-    // Sort records newest-first for the timeline
-    const sorted = records.slice().sort((a, b) => b.recordedAt - a.recordedAt);
+    // Memoization key: cheap O(n) scan for max recordedAt.
+    let maxRecordedAt = 0;
+    for (let i = 0; i < records.length; i++) {
+      if (records[i].recordedAt > maxRecordedAt) maxRecordedAt = records[i].recordedAt;
+    }
+    const cacheKey = `${today}|${records.length}|${maxRecordedAt}`;
 
-    const stats = this._computeStats(records);
-    const chips = this._buildChips(stats);
+    let chips;
+    if (this._statsCacheKey === cacheKey && this._statsCache) {
+      chips = this._statsCache;
+    } else {
+      const stats = this._computeStats(records);
+      chips = this._buildChips(stats);
+      this._statsCacheKey = cacheKey;
+      this._statsCache = chips;
+    }
+
+    // Sort records newest-first for the timeline (shallow copy to avoid mutating storage).
+    const sorted = records.slice().sort((a, b) => b.recordedAt - a.recordedAt);
 
     const now = new Date();
     const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -63,7 +103,8 @@ Page({
       todayRecords: sorted,
       isEmpty: sorted.length === 0,
       activeSleep: storage.getActiveSleep(),
-      activeOuting: storage.getActiveOuting()
+      activeOuting: storage.getActiveOuting(),
+      pendingCount: cloud.pendingCount()
     });
   },
 

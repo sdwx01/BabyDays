@@ -11,23 +11,46 @@ Page({
     records: [],
     grouped: [],
     isEmpty: true,
-    pickerDate: ''
+    pickerDate: '',
+    isLoading: false,
+    syncError: false
   },
+
+  // Memoized grouping, keyed on (dateKey, records.length, max recordedAt).
+  _groupCacheKey: '',
+  _groupCache: null,
 
   onShow() {
     const today = datetime.todayKey();
     const currentSelected = this.data.selectedDate || today;
     this._buildDateChips();
     this._loadDate(currentSelected);
-    // Pull from cloud for the selected date; re-render if new records arrive
-    if (cloud.isAvailable()) {
-      cloud.syncDateFromCloud(currentSelected).then(merged => {
-        if (merged) {
-          this._buildDateChips();
-          this._loadDate(currentSelected);
-        }
-      }).catch(() => {});
-    }
+    this._syncSelected(currentSelected, false);
+  },
+
+  onPullDownRefresh() {
+    const current = this.data.selectedDate || datetime.todayKey();
+    this._syncSelected(current, true).finally(() => wx.stopPullDownRefresh());
+  },
+
+  _syncSelected(dateKey, force) {
+    if (!cloud.isAvailable()) return Promise.resolve();
+    this.setData({ isLoading: true, syncError: false });
+    return cloud.syncDateFromCloud(dateKey, { force: !!force }).then(res => {
+      this.setData({ isLoading: false });
+      if (res.ok && res.merged) {
+        this._buildDateChips();
+        this._loadDate(dateKey);
+      } else if (!res.ok && res.error === cloud.SYNC_ERR_NETWORK) {
+        this.setData({ syncError: true });
+      }
+    }).catch(() => {
+      this.setData({ isLoading: false, syncError: true });
+    });
+  },
+
+  onRetrySync() {
+    this._syncSelected(this.data.selectedDate || datetime.todayKey(), true);
   },
 
   _buildDateChips() {
@@ -49,7 +72,21 @@ Page({
     const records = storage.getRecordsByDate(dateKey);
     records.sort((a, b) => a.recordedAt - b.recordedAt);
 
-    const grouped = this._groupByCategory(records);
+    // Memoization key
+    let maxRecordedAt = 0;
+    for (let i = 0; i < records.length; i++) {
+      if (records[i].recordedAt > maxRecordedAt) maxRecordedAt = records[i].recordedAt;
+    }
+    const cacheKey = `${dateKey}|${records.length}|${maxRecordedAt}`;
+
+    let grouped;
+    if (this._groupCacheKey === cacheKey && this._groupCache) {
+      grouped = this._groupCache;
+    } else {
+      grouped = this._groupByCategory(records);
+      this._groupCacheKey = cacheKey;
+      this._groupCache = grouped;
+    }
 
     this.setData({
       selectedDate: dateKey,
@@ -86,10 +123,13 @@ Page({
   onDateChipTap(e) {
     const dateKey = e.currentTarget.dataset.key;
     this._loadDate(dateKey);
+    this._syncSelected(dateKey, false);
   },
 
   onPickerChange(e) {
-    this._loadDate(e.detail.value);
+    const dateKey = e.detail.value;
+    this._loadDate(dateKey);
+    this._syncSelected(dateKey, false);
   },
 
   onCardTap(e) {

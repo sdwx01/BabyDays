@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "宝宝日记",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "light",
   "usingComponents": {
     "care-card": "/components/care-card/care-card",
     "summary-chip": "/components/summary-chip/summary-chip",

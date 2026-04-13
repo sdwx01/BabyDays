@@ -1,6 +1,8 @@
 // ⚠️  Before deploying, replace 'your-cloud-env-id' below with your actual
 //     WeChat Cloud environment ID (found in the cloud console).
 
+const cloud = require('./utils/cloud');
+
 App({
   onLaunch() {
     // ── Cloud initialisation ────────────────────────────────────────────────
@@ -36,6 +38,25 @@ App({
     const meta = wx.getStorageSync('app_meta') || {};
     this.globalData.babyName  = meta.babyName  || '小宝贝';
     this.globalData.birthDate = meta.birthDate || '';
+
+    // ── Offline sync recovery ───────────────────────────────────────────────
+    // Flush any records that failed to push to cloud in a previous session.
+    this._tryFlushPending();
+
+    // Retry when network comes back.
+    wx.onNetworkStatusChange(res => {
+      if (res.isConnected) this._tryFlushPending();
+    });
+  },
+
+  onShow() {
+    // Each time the mini-program is foregrounded, drain the pending queue.
+    this._tryFlushPending();
+  },
+
+  _tryFlushPending() {
+    if (!cloud.isAvailable()) return;
+    cloud.flushPendingSync().catch(() => {});
   },
 
   globalData: {

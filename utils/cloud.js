@@ -12,6 +12,17 @@ const COLL_RECORDS  = 'records';
 const COLL_FAMILIES = 'families';
 const COLL_MEMBERS  = 'members';
 
+// Per-dateKey TTL cache for syncDateFromCloud. Prevents redundant cloud calls
+// when the user rapidly swaps tabs. TTL is short enough that multi-caregiver
+// writes still become visible promptly.
+const SYNC_TTL_MS = 30 * 1000;
+const _syncCache    = Object.create(null); // dateKey -> { merged, ts }
+const _syncInFlight = Object.create(null); // dateKey -> Promise
+
+// Typed error codes so callers can render the right UI.
+const SYNC_ERR_UNAVAILABLE = 'UNAVAILABLE';
+const SYNC_ERR_NETWORK     = 'NETWORK';
+
 /** Returns true if cloud is initialised AND the user belongs to a family */
 function isAvailable() {
   try {
@@ -46,6 +57,7 @@ async function addRecord(record) {
         familyId
       }
     });
+    _invalidateSyncCache(record.dateKey);
     return true;
   } catch (e) {
     // Ignore "already exists" duplicate errors (code -502005)
@@ -60,10 +72,11 @@ async function addRecord(record) {
  * Deletes a record from cloud by its local id.
  * Falls back gracefully if not found (record may never have synced).
  */
-async function deleteRecord(localId) {
+async function deleteRecord(localId, dateKey) {
   if (!isAvailable()) return false;
   try {
     await _db().collection(COLL_RECORDS).doc(localId).remove();
+    if (dateKey) _invalidateSyncCache(dateKey);
     return true;
   } catch (e) {
     if (e && e.errCode !== -502005) {
@@ -78,7 +91,7 @@ async function deleteRecord(localId) {
  * `dataFields` is a flat object like { endTime: 123, duration: 60 }
  * which gets written as { 'data.endTime': 123, 'data.duration': 60 }.
  */
-async function updateRecord(localId, dataFields) {
+async function updateRecord(localId, dataFields, dateKey) {
   if (!isAvailable()) return false;
   const updateObj = {};
   Object.keys(dataFields).forEach(k => {
@@ -86,6 +99,7 @@ async function updateRecord(localId, dataFields) {
   });
   try {
     await _db().collection(COLL_RECORDS).doc(localId).update({ data: updateObj });
+    if (dateKey) _invalidateSyncCache(dateKey);
     return true;
   } catch (e) {
     console.error('[cloud] updateRecord error:', e);
@@ -95,7 +109,16 @@ async function updateRecord(localId, dataFields) {
 
 /**
  * Fetches all records for a date from cloud and merges them into local storage.
- * Returns the merged array, or null if cloud is unavailable / fetch failed.
+ *
+ * Returns an object of shape:
+ *   { ok: true,  merged: Array|null, fromCache: boolean }
+ *   { ok: false, error: 'UNAVAILABLE' | 'NETWORK' }
+ *
+ * `merged` is the new local array when cloud data changed, or null when local
+ * storage was untouched. `fromCache === true` means a recent (<30s) identical
+ * call was served without hitting the network.
+ *
+ * Concurrent calls for the same dateKey are de-duplicated via an in-flight map.
  *
  * Merge strategy:
  *   - Cloud records are authoritative (written by any caregiver)
@@ -104,8 +127,34 @@ async function updateRecord(localId, dataFields) {
  *     the cloud set is non-empty, we trust cloud and remove the local copy
  *     UNLESS it was added in the last 30 seconds (to avoid race conditions).
  */
-async function syncDateFromCloud(dateKey) {
-  if (!isAvailable()) return null;
+function syncDateFromCloud(dateKey, options) {
+  const opts = options || {};
+
+  if (!isAvailable()) {
+    return Promise.resolve({ ok: false, error: SYNC_ERR_UNAVAILABLE });
+  }
+
+  // Serve from TTL cache unless force-refresh
+  if (!opts.force) {
+    const cached = _syncCache[dateKey];
+    if (cached && (Date.now() - cached.ts) < SYNC_TTL_MS) {
+      return Promise.resolve({ ok: true, merged: null, fromCache: true });
+    }
+  }
+
+  // De-dupe in-flight
+  if (_syncInFlight[dateKey]) {
+    return _syncInFlight[dateKey];
+  }
+
+  const p = _doSync(dateKey).finally(() => {
+    delete _syncInFlight[dateKey];
+  });
+  _syncInFlight[dateKey] = p;
+  return p;
+}
+
+async function _doSync(dateKey) {
   const familyId = _familyId();
 
   try {
@@ -123,11 +172,15 @@ async function syncDateFromCloud(dateKey) {
     const localKey = `records_${dateKey}`;
     const localRecords = wx.getStorageSync(localKey) || [];
 
-    if (cloudRecords.length === 0 && localRecords.length === 0) return null;
+    _syncCache[dateKey] = { ts: Date.now() };
+
+    if (cloudRecords.length === 0 && localRecords.length === 0) {
+      return { ok: true, merged: null, fromCache: false };
+    }
 
     if (cloudRecords.length === 0) {
       // Cloud empty — could be first sync for this date; keep local
-      return null;
+      return { ok: true, merged: null, fromCache: false };
     }
 
     // Build id sets
@@ -145,11 +198,15 @@ async function syncDateFromCloud(dateKey) {
     wx.setStorageSync(localKey, merged);
     _ensureDateInIndex(dateKey);
 
-    return merged;
+    return { ok: true, merged, fromCache: false };
   } catch (e) {
     console.error('[cloud] syncDateFromCloud error:', e);
-    return null;
+    return { ok: false, error: SYNC_ERR_NETWORK };
   }
+}
+
+function _invalidateSyncCache(dateKey) {
+  if (dateKey) delete _syncCache[dateKey];
 }
 
 function _ensureDateInIndex(dateKey) {
@@ -161,6 +218,101 @@ function _ensureDateInIndex(dateKey) {
       wx.setStorageSync('days_index', index);
     }
   } catch (e) {}
+}
+
+// ─── Pending sync queue (offline-first) ───────────────────────────────────────
+//
+// When a record is saved locally while offline (or when a cloud push fails),
+// its id + dateKey are enqueued here. On app resume or when the network comes
+// back, flushPendingSync() drains the queue.
+//
+// Queue shape: [{ id, dateKey, op: 'add' | 'update' | 'delete', payload?, enqueuedAt }]
+
+const PENDING_KEY = 'pending_sync_queue';
+const MAX_QUEUE_SIZE = 500; // cap to protect storage
+
+// Cached set of pending ids, rebuilt lazily. Invalidated on every write.
+let _pendingIdSet = null;
+
+function _readPending() {
+  try {
+    const q = wx.getStorageSync(PENDING_KEY);
+    return Array.isArray(q) ? q : [];
+  } catch (e) { return []; }
+}
+
+function _writePending(queue) {
+  try {
+    // Drop oldest if exceeding cap
+    if (queue.length > MAX_QUEUE_SIZE) {
+      queue = queue.slice(queue.length - MAX_QUEUE_SIZE);
+    }
+    wx.setStorageSync(PENDING_KEY, queue);
+    _pendingIdSet = null; // invalidate cache
+  } catch (e) {
+    console.error('[cloud] _writePending error:', e);
+  }
+}
+
+function enqueuePending(op, id, dateKey, payload) {
+  const queue = _readPending();
+  queue.push({ op, id, dateKey, payload: payload || null, enqueuedAt: Date.now() });
+  _writePending(queue);
+}
+
+function pendingCount() {
+  return _readPending().length;
+}
+
+function _pendingIdsCached() {
+  if (_pendingIdSet) return _pendingIdSet;
+  _pendingIdSet = new Set(_readPending().map(i => i.id));
+  return _pendingIdSet;
+}
+
+function isPending(id) {
+  return _pendingIdsCached().has(id);
+}
+
+/**
+ * Drains the pending queue, retrying each operation against the cloud.
+ * Failed items are kept in the queue for a later retry.
+ * Returns { attempted, succeeded, remaining }.
+ */
+async function flushPendingSync() {
+  if (!isAvailable()) {
+    return { attempted: 0, succeeded: 0, remaining: _readPending().length };
+  }
+  const queue = _readPending();
+  if (queue.length === 0) {
+    return { attempted: 0, succeeded: 0, remaining: 0 };
+  }
+
+  const remaining = [];
+  let succeeded = 0;
+
+  for (const item of queue) {
+    let ok = false;
+    try {
+      if (item.op === 'add' && item.payload) {
+        ok = await addRecord(item.payload);
+      } else if (item.op === 'update') {
+        ok = await updateRecord(item.id, item.payload || {}, item.dateKey);
+      } else if (item.op === 'delete') {
+        ok = await deleteRecord(item.id, item.dateKey);
+      }
+    } catch (e) {
+      ok = false;
+    }
+    if (ok) {
+      succeeded++;
+    } else {
+      remaining.push(item);
+    }
+  }
+
+  _writePending(remaining);
+  return { attempted: queue.length, succeeded, remaining: remaining.length };
 }
 
 // ─── Family operations ────────────────────────────────────────────────────────
@@ -292,5 +444,13 @@ module.exports = {
   getFamilyMembers,
   regenerateInviteCode,
   migrateLocalToCloud,
-  uploadFile
+  uploadFile,
+  // pending-sync queue
+  enqueuePending,
+  pendingCount,
+  isPending,
+  flushPendingSync,
+  // error constants
+  SYNC_ERR_UNAVAILABLE,
+  SYNC_ERR_NETWORK
 };

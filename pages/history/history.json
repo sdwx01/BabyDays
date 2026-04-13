@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "历史记录",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "light",
   "usingComponents": {
     "care-card": "/components/care-card/care-card",
     "section-header": "/components/section-header/section-header"

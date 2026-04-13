@@ -1,5 +1,6 @@
 const datetime = require('../../utils/datetime');
 const constants = require('../../utils/constants');
+const cloud = require('../../utils/cloud');
 
 Component({
   properties: {
@@ -16,7 +17,8 @@ Component({
   data: {
     cat: null,
     timeLabel: '',
-    summary: ''
+    summary: '',
+    pending: false
   },
 
   observers: {
@@ -27,7 +29,8 @@ Component({
         ? datetime.formatDateTime(record.recordedAt)
         : datetime.formatTime(record.recordedAt);
       const summary = this._buildSummary(record);
-      this.setData({ cat, timeLabel, summary });
+      const pending = cloud.isPending(record.id);
+      this.setData({ cat, timeLabel, summary, pending });
     }
   },
 

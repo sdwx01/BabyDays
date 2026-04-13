@@ -13,7 +13,10 @@
         <text class="card-creator" wx:if="{{record.creatorName}}">{{record.creatorName}}</text>
       </view>
     </view>
-    <!-- Right: time -->
-    <text class="card-time">{{timeLabel}}</text>
+    <!-- Right: time + optional pending-sync dot -->
+    <view class="card-right">
+      <text class="card-time">{{timeLabel}}</text>
+      <text class="card-pending-dot" wx:if="{{pending}}">☁️</text>
+    </view>
   </view>
 </view>
