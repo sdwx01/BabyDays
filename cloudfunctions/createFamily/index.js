@@ -12,9 +12,13 @@ exports.main = async (event, context) => {
   try {
     const inviteCode = _generateCode();
 
-    // Create family document
+    // Create family document.
+    // _openid must be set explicitly here because cloud functions do NOT
+    // auto-set it (unlike miniprogram-side writes). Without it the document
+    // has no _openid, so a "仅创建者可读写" client-side read always fails.
     const familyRes = await db.collection('families').add({
       data: {
+        _openid:   OPENID,
         babyName:  event.babyName  || '小宝贝',
         birthDate: event.birthDate || '',
         inviteCode,

@@ -31,6 +31,7 @@ Page({
       babyName:    meta.babyName  || '小宝贝',
       birthDate:   meta.birthDate || '',
       babyAge:     meta.birthDate ? datetime.babyAge(meta.birthDate) : '',
+      inviteCode:  wx.getStorageSync('cached_invite_code') || '',
       myNickname:  userMeta.nickname || '家长',
       familyId,
       cloudLinked: !!familyId
@@ -87,6 +88,7 @@ Page({
         wx.hideLoading();
         if (newCode) {
           this.setData({ inviteCode: newCode });
+          wx.setStorageSync('cached_invite_code', newCode);
           wx.showToast({ title: '邀请码已刷新', icon: 'none' });
         } else {
           wx.showToast({ title: '刷新失败，无权限', icon: 'none' });

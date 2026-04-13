@@ -50,7 +50,7 @@ Page({
       wx.showToast({ title: res.error || '创建失败', icon: 'none' }); return;
     }
 
-    this._completeSetup(res.familyId, babyName.trim(), birthDate, nickname.trim(), true);
+    this._completeSetup(res.familyId, babyName.trim(), birthDate, nickname.trim(), true, res.inviteCode || '');
   },
 
   // ── Join family ───────────────────────────────────────────────────────────
@@ -77,15 +77,16 @@ Page({
       wx.showToast({ title: res.error || '加入失败', icon: 'none' }); return;
     }
 
-    this._completeSetup(res.familyId, res.babyName, res.birthDate, joinNickname.trim(), false);
+    this._completeSetup(res.familyId, res.babyName, res.birthDate, joinNickname.trim(), false, res.inviteCode || '');
   },
 
   // ── Shared post-setup logic ───────────────────────────────────────────────
 
-  async _completeSetup(familyId, babyName, birthDate, nickname, isCreator) {
+  async _completeSetup(familyId, babyName, birthDate, nickname, isCreator, inviteCode = '') {
     // Persist family membership
     wx.setStorageSync('family_id', familyId);
     wx.setStorageSync('user_meta', { nickname });
+    if (inviteCode) wx.setStorageSync('cached_invite_code', inviteCode);
 
     // Update app_meta with baby info
     storage.setAppMeta({ babyName, birthDate, version: '1.0.0' });

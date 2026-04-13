@@ -43,11 +43,15 @@ exports.main = async (event, context) => {
       });
     }
 
+    // Return inviteCode so the joining member can cache it locally.
+    // They cannot read it from the DB directly (no _openid ownership),
+    // so this is the only reliable way for them to display the code.
     return {
-      success:   true,
+      success:    true,
       familyId,
-      babyName:  family.babyName  || '小宝贝',
-      birthDate: family.birthDate || ''
+      babyName:   family.babyName   || '小宝贝',
+      birthDate:  family.birthDate  || '',
+      inviteCode: family.inviteCode || ''
     };
   } catch (e) {
     console.error('[joinFamily]', e);
