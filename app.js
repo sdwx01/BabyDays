@@ -1,14 +1,19 @@
-// ⚠️  Before deploying, replace 'your-cloud-env-id' below with your actual
-//     WeChat Cloud environment ID (found in the cloud console).
+// ⚠️  Replace the two TODO values below before deploying:
+//     1. CLOUD_ENV_ID  → 云开发环境 ID（云开发控制台 → 环境 → 环境ID）
+//     2. project.config.json → appid（替换为你的小程序 AppID）
+
+const CLOUD_ENV_ID = 'your-cloud-env-id';  // TODO: replace
 
 App({
   onLaunch() {
     // ── Cloud initialisation ────────────────────────────────────────────────
-    if (wx.cloud) {
-      wx.cloud.init({
-        env: 'your-cloud-env-id',   // TODO: replace with your env ID
-        traceUser: true
-      });
+    // Skip cloud init if env id is still a placeholder to avoid startup crash.
+    if (wx.cloud && CLOUD_ENV_ID && CLOUD_ENV_ID !== 'your-cloud-env-id') {
+      try {
+        wx.cloud.init({ env: CLOUD_ENV_ID, traceUser: true });
+      } catch (e) {
+        console.warn('[app] cloud init failed:', e);
+      }
     }
 
     // ── Local storage defaults ──────────────────────────────────────────────

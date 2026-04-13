@@ -30,7 +30,7 @@
   "cloudfunctionRoot": "cloudfunctions/",
   "compileType": "miniprogram",
   "libVersion": "2.25.0",
-  "appid": "wx0000000000000000",
+  "appid": "YOUR_APPID_HERE",
   "projectname": "BabyDays",
   "debugOptions": {
     "hidedInDevtools": []
