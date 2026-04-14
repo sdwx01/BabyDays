@@ -1,6 +1,7 @@
-const storage = require('../../../utils/storage');
-const datetime = require('../../../utils/datetime');
+const storage   = require('../../../utils/storage');
+const datetime  = require('../../../utils/datetime');
 const constants = require('../../../utils/constants');
+const formedit  = require('../../../utils/formedit');
 
 Page({
   data: {
@@ -14,14 +15,34 @@ Page({
     consistencies: constants.DIAPER_CONSISTENCY,
     hasRash: false,
     notes: '',
-    showBowelFields: false
+    showBowelFields: false,
+    isEdit: false,
+    editingId: null,
+    editingDateKey: null
   },
 
-  onLoad() {
+  onLoad(options) {
     this.setData({
       date: datetime.todayKey(),
       time: datetime.currentTime()
     });
+
+    const rec = formedit.beginEdit(this, options);
+    if (rec) {
+      const d = rec.data || {};
+      const colorIdx = Math.max(0, this.data.colors.indexOf(d.color));
+      const consIdx  = Math.max(0, this.data.consistencies.indexOf(d.consistency));
+      this.setData({
+        date: rec.dateKey,
+        time: datetime.formatTime(rec.recordedAt),
+        diaperType: d.diaperType || 'wet',
+        colorIndex: colorIdx,
+        consistencyIndex: consIdx,
+        hasRash: !!d.hasRash,
+        notes: d.notes || '',
+        showBowelFields: d.diaperType === 'dirty' || d.diaperType === 'both'
+      });
+    }
   },
 
   onDateChange(e) { this.setData({ date: e.detail.value }); },
@@ -42,7 +63,7 @@ Page({
   onNotesInput(e) { this.setData({ notes: e.detail.value }); },
 
   onSave() {
-    const { date, time, diaperType, colors, colorIndex, consistencies, consistencyIndex, hasRash, notes, showBowelFields } = this.data;
+    const { date, time, diaperType, colors, colorIndex, consistencies, consistencyIndex, hasRash, notes, showBowelFields, isEdit } = this.data;
 
     const recordedAt = datetime.parseDateTime(date, time);
     const record = {
@@ -60,8 +81,8 @@ Page({
       }
     };
 
-    storage.addRecord(record);
-    wx.showToast({ title: '已记录 👶', icon: 'none', duration: 1200 });
+    formedit.commitSave(this, record);
+    wx.showToast({ title: isEdit ? '已更新 ✓' : '已记录 👶', icon: 'none', duration: 1200 });
     setTimeout(() => wx.navigateBack(), 800);
   }
 });

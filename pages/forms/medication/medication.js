@@ -1,5 +1,6 @@
-const storage = require('../../../utils/storage');
+const storage  = require('../../../utils/storage');
 const datetime = require('../../../utils/datetime');
+const formedit = require('../../../utils/formedit');
 
 Page({
   data: {
@@ -7,11 +8,25 @@ Page({
     time: '',
     name: '',
     dose: '',
-    notes: ''
+    notes: '',
+    isEdit: false,
+    editingId: null,
+    editingDateKey: null
   },
 
-  onLoad() {
+  onLoad(options) {
     this.setData({ date: datetime.todayKey(), time: datetime.currentTime() });
+    const rec = formedit.beginEdit(this, options);
+    if (rec) {
+      const d = rec.data || {};
+      this.setData({
+        date: rec.dateKey,
+        time: datetime.formatTime(rec.recordedAt),
+        name: d.name || '',
+        dose: d.dose || '',
+        notes: d.notes || ''
+      });
+    }
   },
 
   onDateChange(e) { this.setData({ date: e.detail.value }); },
@@ -21,7 +36,7 @@ Page({
   onNotesInput(e) { this.setData({ notes: e.detail.value }); },
 
   onSave() {
-    const { date, time, name, dose, notes } = this.data;
+    const { date, time, name, dose, notes, isEdit } = this.data;
     if (!name.trim()) { wx.showToast({ title: '请输入药品名称', icon: 'none' }); return; }
     if (!dose.trim()) { wx.showToast({ title: '请输入剂量', icon: 'none' }); return; }
 
@@ -34,8 +49,8 @@ Page({
       data: { name: name.trim(), dose: dose.trim(), notes: notes.trim() }
     };
 
-    storage.addRecord(record);
-    wx.showToast({ title: '已记录 💊', icon: 'none', duration: 1200 });
+    formedit.commitSave(this, record);
+    wx.showToast({ title: isEdit ? '已更新 ✓' : '已记录 💊', icon: 'none', duration: 1200 });
     setTimeout(() => wx.navigateBack(), 800);
   }
 });

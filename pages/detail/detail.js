@@ -2,18 +2,43 @@ const storage = require('../../utils/storage');
 const datetime = require('../../utils/datetime');
 const constants = require('../../utils/constants');
 
+// Map record.type → the form page under pages/forms that edits it.
+const EDIT_ROUTES = {
+  feeding:     'feeding',
+  diaper:      'diaper',
+  sleep:       'sleep',
+  medication:  'medication',
+  vaccination: 'vaccination',
+  outing:      'outing',
+  bath:        'bath',
+  food:        'food',
+  milestone:   'milestone'
+};
+
 Page({
   data: {
     record: null,
     cat: null,
     fields: [],
     photos: [],
+    videos: [],
     timeDisplay: '',
     dateDisplay: ''
   },
 
   onLoad(options) {
-    const { id, dateKey } = options;
+    this._options = options;
+    this._load(options);
+  },
+
+  // When returning from the edit form, re-read the record so fresh data renders.
+  onShow() {
+    if (this._options && this.data.record) this._load(this._options);
+  },
+
+  _load(options) {
+    const { id, dateKey } = options || {};
+    if (!id || !dateKey) return;
     const records = storage.getRecordsByDate(dateKey);
     const record = records.find(r => r.id === id);
 
@@ -29,12 +54,16 @@ Page({
     const photos = (record.type === 'milestone' && record.data.photos && record.data.photos.length > 0)
       ? record.data.photos
       : [];
+    const videos = (record.type === 'milestone' && record.data.videos && record.data.videos.length > 0)
+      ? record.data.videos
+      : [];
 
     this.setData({
       record,
       cat,
       fields,
       photos,
+      videos,
       timeDisplay: datetime.formatTime(record.recordedAt),
       dateDisplay: datetime.dateKeyToDisplay(record.dateKey),
       createdAtDisplay: datetime.formatDateTime(record.createdAt)
@@ -130,6 +159,21 @@ Page({
   onPreviewPhoto(e) {
     const current = e.currentTarget.dataset.src;
     wx.previewImage({ current, urls: this.data.photos });
+  },
+
+  onEdit() {
+    const { record } = this.data;
+    if (!record) return;
+    const route = EDIT_ROUTES[record.type];
+    if (!route) return;
+    // Editing an in-progress sleep/outing makes no sense — guard.
+    if ((record.type === 'sleep' || record.type === 'outing') && !record.data.endTime) {
+      wx.showToast({ title: '进行中的记录请在首页结束后再编辑', icon: 'none', duration: 2000 });
+      return;
+    }
+    wx.navigateTo({
+      url: `/pages/forms/${route}/${route}?recordId=${record.id}&dateKey=${record.dateKey}`
+    });
   },
 
   onDelete() {

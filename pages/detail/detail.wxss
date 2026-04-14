@@ -120,10 +120,43 @@
   color: #CCCCCC;
 }
 
-/* Delete */
-.delete-area {
-  padding: 32rpx 24rpx 0;
+/* Videos list */
+.videos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
 }
+
+.video-player {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 12rpx;
+  background: #000;
+  display: block;
+}
+
+/* Actions (edit + delete) */
+.action-area {
+  padding: 32rpx 24rpx 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.edit-btn {
+  width: 100%;
+  height: 88rpx;
+  background: #FFF0F5;
+  color: #FF8FAB;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  border: 2rpx solid #FFD1E0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-btn::after { border: none; }
 
 .delete-btn {
   width: 100%;

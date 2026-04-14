@@ -50,6 +50,67 @@
     </view>
   </block>
 
+  <!-- EDIT MODE -->
+  <block wx:elif="{{mode === 'edit'}}">
+    <view class="form-hero" style="background: linear-gradient(135deg, #B5F0FF, #7ECFFF);">
+      <text class="form-hero-emoji">😴</text>
+      <text class="form-hero-title">编辑睡眠记录</text>
+    </view>
+
+    <view class="form-body">
+      <view class="card">
+        <view class="form-row">
+          <text class="form-label">入睡日期</text>
+          <picker mode="date" value="{{date}}" bindchange="onDateChange">
+            <view class="picker-row"><text class="picker-value">{{date}}</text><text class="picker-arrow">›</text></view>
+          </picker>
+        </view>
+        <view class="divider"></view>
+        <view class="form-row">
+          <text class="form-label">入睡时间</text>
+          <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+            <view class="picker-row"><text class="picker-value">{{time}}</text><text class="picker-arrow">›</text></view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="form-row">
+          <text class="form-label">结束日期</text>
+          <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+            <view class="picker-row"><text class="picker-value">{{endDate}}</text><text class="picker-arrow">›</text></view>
+          </picker>
+        </view>
+        <view class="divider"></view>
+        <view class="form-row">
+          <text class="form-label">结束时间</text>
+          <picker mode="time" value="{{endTime}}" bindchange="onEndTimeChange">
+            <view class="picker-row"><text class="picker-value">{{endTime}}</text><text class="picker-arrow">›</text></view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="form-row">
+          <text class="form-label">睡眠地点</text>
+          <picker mode="selector" range="{{locations}}" value="{{locationIndex}}" bindchange="onLocationChange">
+            <view class="picker-row">
+              <text class="picker-value">{{locations[locationIndex]}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="card">
+        <text class="card-section-label">备注（选填）</text>
+        <textarea class="form-textarea" value="{{notes}}" placeholder="添加备注..." bindinput="onNotesInput" auto-height />
+      </view>
+
+      <button class="save-btn" style="background: #7ECFFF;" bindtap="onSaveEdit">更新记录</button>
+    </view>
+  </block>
+
   <!-- END MODE -->
   <block wx:else>
     <view class="form-hero" style="background: linear-gradient(135deg, #B5F0FF, #7ECFFF);">

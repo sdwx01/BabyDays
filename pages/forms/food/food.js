@@ -1,6 +1,7 @@
-const storage = require('../../../utils/storage');
-const datetime = require('../../../utils/datetime');
+const storage   = require('../../../utils/storage');
+const datetime  = require('../../../utils/datetime');
 const constants = require('../../../utils/constants');
+const formedit  = require('../../../utils/formedit');
 
 Page({
   data: {
@@ -11,11 +12,28 @@ Page({
     isFirstTime: false,
     reactionIndex: 0,
     reactions: constants.FOOD_REACTIONS,
-    notes: ''
+    notes: '',
+    isEdit: false,
+    editingId: null,
+    editingDateKey: null
   },
 
-  onLoad() {
+  onLoad(options) {
     this.setData({ date: datetime.todayKey(), time: datetime.currentTime() });
+    const rec = formedit.beginEdit(this, options);
+    if (rec) {
+      const d = rec.data || {};
+      const rIdx = Math.max(0, this.data.reactions.indexOf(d.reaction));
+      this.setData({
+        date: rec.dateKey,
+        time: datetime.formatTime(rec.recordedAt),
+        foodName: d.foodName || '',
+        amount: d.amount || '',
+        isFirstTime: !!d.isFirstTime,
+        reactionIndex: rIdx,
+        notes: d.notes || ''
+      });
+    }
   },
 
   onDateChange(e) { this.setData({ date: e.detail.value }); },
@@ -27,7 +45,7 @@ Page({
   onNotesInput(e) { this.setData({ notes: e.detail.value }); },
 
   onSave() {
-    const { date, time, foodName, amount, isFirstTime, reactions, reactionIndex, notes } = this.data;
+    const { date, time, foodName, amount, isFirstTime, reactions, reactionIndex, notes, isEdit } = this.data;
     if (!foodName.trim()) { wx.showToast({ title: '请输入食物名称', icon: 'none' }); return; }
 
     const record = {
@@ -45,8 +63,8 @@ Page({
       }
     };
 
-    storage.addRecord(record);
-    const toast = isFirstTime ? '🌟首次记录！' : '已记录 🥕';
+    formedit.commitSave(this, record);
+    const toast = isEdit ? '已更新 ✓' : (isFirstTime ? '🌟首次记录！' : '已记录 🥕');
     wx.showToast({ title: toast, icon: 'none', duration: 1500 });
     setTimeout(() => wx.navigateBack(), 1000);
   }

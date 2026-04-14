@@ -108,6 +108,33 @@ async function updateRecord(localId, dataFields, dateKey) {
 }
 
 /**
+ * Replaces an entire record document in cloud.
+ *
+ * Since the local record id is used as the cloud _id and ids are preserved
+ * across edits, we use `doc(id).set({data})` which replaces the whole doc
+ * (creating it if missing). This covers same-date edits cleanly.
+ *
+ * For cross-date edits the record's dateKey field changes but _id stays
+ * the same, so a `set` is still correct — the dateKey on the doc simply
+ * updates, and future syncDateFromCloud calls pull it under the new date.
+ */
+async function replaceRecord(record, oldId, oldDateKey) {
+  if (!isAvailable()) return false;
+  const familyId = _familyId();
+  try {
+    await _db().collection(COLL_RECORDS).doc(record.id).set({
+      data: { ...record, familyId }
+    });
+    if (oldDateKey)      _invalidateSyncCache(oldDateKey);
+    if (record.dateKey)  _invalidateSyncCache(record.dateKey);
+    return true;
+  } catch (e) {
+    console.error('[cloud] replaceRecord error:', e);
+    return false;
+  }
+}
+
+/**
  * Fetches all records for a date from cloud and merges them into local storage.
  *
  * Returns an object of shape:
@@ -300,6 +327,8 @@ async function flushPendingSync() {
         ok = await updateRecord(item.id, item.payload || {}, item.dateKey);
       } else if (item.op === 'delete') {
         ok = await deleteRecord(item.id, item.dateKey);
+      } else if (item.op === 'replace' && item.payload && item.payload.record) {
+        ok = await replaceRecord(item.payload.record, item.payload.oldId, item.payload.oldDateKey);
       }
     } catch (e) {
       ok = false;
@@ -437,6 +466,7 @@ module.exports = {
   addRecord,
   deleteRecord,
   updateRecord,
+  replaceRecord,
   syncDateFromCloud,
   createFamily,
   joinFamily,

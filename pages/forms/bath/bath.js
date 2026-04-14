@@ -1,5 +1,6 @@
-const storage = require('../../../utils/storage');
+const storage  = require('../../../utils/storage');
 const datetime = require('../../../utils/datetime');
+const formedit = require('../../../utils/formedit');
 
 Page({
   data: {
@@ -8,11 +9,26 @@ Page({
     waterTemp: 38,
     duration: '',
     usedProducts: '',
-    notes: ''
+    notes: '',
+    isEdit: false,
+    editingId: null,
+    editingDateKey: null
   },
 
-  onLoad() {
+  onLoad(options) {
     this.setData({ date: datetime.todayKey(), time: datetime.currentTime() });
+    const rec = formedit.beginEdit(this, options);
+    if (rec) {
+      const d = rec.data || {};
+      this.setData({
+        date: rec.dateKey,
+        time: datetime.formatTime(rec.recordedAt),
+        waterTemp: d.waterTemp != null ? d.waterTemp : 38,
+        duration: d.duration != null ? String(d.duration) : '',
+        usedProducts: d.usedProducts || '',
+        notes: d.notes || ''
+      });
+    }
   },
 
   onDateChange(e) { this.setData({ date: e.detail.value }); },
@@ -23,7 +39,7 @@ Page({
   onNotesInput(e) { this.setData({ notes: e.detail.value }); },
 
   onSave() {
-    const { date, time, waterTemp, duration, usedProducts, notes } = this.data;
+    const { date, time, waterTemp, duration, usedProducts, notes, isEdit } = this.data;
 
     const record = {
       id: storage.generateId(),
@@ -39,8 +55,8 @@ Page({
       }
     };
 
-    storage.addRecord(record);
-    wx.showToast({ title: '已记录 🛁', icon: 'none', duration: 1200 });
+    formedit.commitSave(this, record);
+    wx.showToast({ title: isEdit ? '已更新 ✓' : '已记录 🛁', icon: 'none', duration: 1200 });
     setTimeout(() => wx.navigateBack(), 800);
   }
 });

@@ -1,0 +1,179 @@
+.milestones-page {
+  height: 100vh;
+  background: #FFFBF0;
+}
+
+/* Hero */
+.ms-hero {
+  background: linear-gradient(135deg, #FFF4B5 0%, #FFD700 100%);
+  padding: 48rpx 32rpx 36rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ms-hero-emoji { font-size: 80rpx; margin-bottom: 12rpx; }
+.ms-hero-title { font-size: 36rpx; font-weight: 700; color: #3D3D3D; }
+.ms-hero-sub   { font-size: 24rpx; color: #7D6000; margin-top: 8rpx; }
+
+.ms-stats {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 24rpx;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 999rpx;
+  padding: 14rpx 40rpx;
+}
+.ms-stat { display: flex; flex-direction: column; align-items: center; padding: 0 28rpx; }
+.ms-stat-value { font-size: 32rpx; font-weight: 700; color: #7D6000; }
+.ms-stat-label { font-size: 22rpx; color: #7D6000; margin-top: 2rpx; }
+.ms-stat-divider { width: 2rpx; height: 40rpx; background: rgba(125,96,0,0.25); }
+
+/* Empty */
+.ms-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 48rpx 60rpx;
+}
+.ms-empty-emoji { font-size: 120rpx; margin-bottom: 24rpx; }
+.ms-empty-text  { font-size: 32rpx; font-weight: 600; color: #B8860B; margin-bottom: 12rpx; }
+.ms-empty-sub   { font-size: 24rpx; color: #AAAAAA; text-align: center; margin-bottom: 36rpx; }
+.ms-empty-btn {
+  background: #FFD700;
+  border-radius: 999rpx;
+  padding: 22rpx 56rpx;
+}
+.ms-empty-btn-text { font-size: 30rpx; font-weight: 700; color: #7D6000; letter-spacing: 2rpx; }
+
+/* Skeleton */
+.ms-body { padding: 24rpx; }
+.ms-skeleton {
+  height: 280rpx;
+  margin-bottom: 20rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(90deg, #F5F5F5 0%, #ECECEC 50%, #F5F5F5 100%);
+  background-size: 200% 100%;
+  animation: ms-pulse 1.4s ease-in-out infinite;
+}
+@keyframes ms-pulse {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* Groups */
+.ms-group { margin-bottom: 12rpx; }
+
+.ms-month {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 16rpx 12rpx;
+  margin-top: 12rpx;
+}
+.ms-month-label { font-size: 30rpx; font-weight: 700; color: #7D6000; }
+.ms-month-count { font-size: 22rpx; color: #B8860B; }
+
+/* Item card */
+.ms-item {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(255, 215, 0, 0.18);
+}
+
+.ms-cover {
+  position: relative;
+  width: 100%;
+  height: 400rpx;
+  background: #FFF9E0;
+}
+.ms-cover-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.ms-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FFF4B5 0%, #FFE082 100%);
+}
+.ms-cover-placeholder-emoji { font-size: 120rpx; opacity: 0.6; }
+
+.ms-badges {
+  position: absolute;
+  bottom: 16rpx;
+  left: 16rpx;
+  display: flex;
+  flex-direction: row;
+  gap: 8rpx;
+}
+.ms-badge {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 999rpx;
+  padding: 6rpx 16rpx;
+}
+.ms-badge-text { font-size: 22rpx; color: #FFFFFF; }
+
+.ms-first-tag {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  background: #FFD700;
+  border-radius: 999rpx;
+  padding: 8rpx 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.15);
+}
+.ms-first-text { font-size: 22rpx; color: #7D6000; font-weight: 700; }
+
+.ms-meta { padding: 24rpx 28rpx 28rpx; }
+.ms-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #3D3D3D;
+  display: block;
+  margin-bottom: 8rpx;
+}
+.ms-type {
+  font-size: 22rpx;
+  color: #B8860B;
+  background: #FFF9E0;
+  border-radius: 999rpx;
+  padding: 4rpx 16rpx;
+  align-self: flex-start;
+  display: inline-block;
+  margin-right: 8rpx;
+}
+.ms-desc {
+  font-size: 26rpx;
+  color: #666666;
+  display: block;
+  margin-top: 12rpx;
+  line-height: 1.6;
+}
+.ms-date {
+  font-size: 22rpx;
+  color: #AAAAAA;
+  display: block;
+  margin-top: 12rpx;
+}
+
+.ms-bottom-spacer { height: 120rpx; }
+
+/* Floating add button */
+.ms-fab {
+  position: fixed;
+  bottom: 48rpx;
+  right: 32rpx;
+  background: #FFD700;
+  border-radius: 999rpx;
+  padding: 22rpx 40rpx;
+  box-shadow: 0 8rpx 24rpx rgba(255, 215, 0, 0.5);
+  z-index: 100;
+}
+.ms-fab-text { font-size: 28rpx; font-weight: 700; color: #7D6000; letter-spacing: 2rpx; }
