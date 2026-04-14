@@ -24,6 +24,29 @@
     <view class="card">
       <text class="card-section-label">药品名称</text>
       <input class="form-input" value="{{name}}" placeholder="例如：布洛芬、维生素D..." bindinput="onNameInput" />
+
+      <text class="suggestion-label" wx:if="{{suggestions.length > 0}}">
+        快速选择 <text class="suggestion-hint">（长按常用药品可移除）</text>
+      </text>
+      <scroll-view
+        wx:if="{{suggestions.length > 0}}"
+        scroll-x
+        class="suggestions-row"
+        show-scrollbar="{{false}}"
+      >
+        <view
+          class="med-chip {{item.custom ? 'med-chip-custom' : ''}} {{name === item.name ? 'med-chip-active' : ''}}"
+          wx:for="{{suggestions}}"
+          wx:key="name"
+          bindtap="onChipTap"
+          bindlongpress="onChipLongPress"
+          data-index="{{index}}"
+        >
+          <text class="med-chip-dot" wx:if="{{item.custom}}">•</text>
+          <text class="med-chip-text">{{item.name}}</text>
+        </view>
+        <view style="width: 8rpx; display: inline-block;"></view>
+      </scroll-view>
     </view>
 
     <view class="card">
