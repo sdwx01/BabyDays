@@ -2,14 +2,35 @@
   <!-- Hero header -->
   <view class="hero">
     <view class="hero-left">
-      <text class="greeting">{{greeting}}，{{babyName}} 👶</text>
+      <view class="greeting-row">
+        <text class="greeting">{{greeting}}，{{babyName}} 👶</text>
+        <text class="sync-dot" wx:if="{{isSyncing}}">↻</text>
+      </view>
       <text class="date-display">{{dateDisplay}}</text>
       <text class="baby-age" wx:if="{{babyAge}}">宝宝 {{babyAge}} 了</text>
     </view>
-    <view class="hero-right" bindtap="goToFamily">
-      <text class="family-icon">👨‍👩‍👧</text>
-      <text class="sync-dot" wx:if="{{isSyncing}}">↻</text>
+  </view>
+
+  <!-- Family management entry -->
+  <view class="family-entry {{familyLinked ? '' : 'family-entry-unlinked'}}" bindtap="goToFamily">
+    <view class="family-entry-icon">
+      <text class="family-entry-emoji">{{familyLinked ? '👨‍👩‍👧' : '☁️'}}</text>
     </view>
+    <view class="family-entry-text">
+      <text class="family-entry-title">
+        {{familyLinked ? '家庭管理' : '开启云同步'}}
+      </text>
+      <text class="family-entry-sub" wx:if="{{familyLinked && familyMemberCount > 1}}">
+        {{familyMemberCount}} 位家人一起记录{{familyInviteCode ? ' · 邀请码 ' + familyInviteCode : ''}}
+      </text>
+      <text class="family-entry-sub" wx:elif="{{familyLinked}}">
+        邀请家人共同记录{{familyInviteCode ? ' · 邀请码 ' + familyInviteCode : ''}}
+      </text>
+      <text class="family-entry-sub" wx:else>
+        和家人一起记录宝宝的每一刻
+      </text>
+    </view>
+    <text class="family-entry-arrow">›</text>
   </view>
 
   <!-- Sync error banner -->

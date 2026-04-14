@@ -61,6 +61,17 @@ Page({
     }
 
     this.setData(updates);
+
+    // Cache summary for the Home entry card so it can render an informative
+    // label ("2 位家人同步中 · 邀请码 ABC123") without hitting cloud on every
+    // Home onShow.
+    try {
+      wx.setStorageSync('family_summary_cache', {
+        memberCount: (members && members.length) || 0,
+        inviteCode:  updates.inviteCode || this.data.inviteCode || '',
+        updatedAt:   Date.now()
+      });
+    } catch (e) {}
   },
 
   // ── Copy invite code ──────────────────────────────────────────────────────
@@ -89,6 +100,13 @@ Page({
         if (newCode) {
           this.setData({ inviteCode: newCode });
           wx.setStorageSync('cached_invite_code', newCode);
+          // Keep the Home entry-card summary in sync.
+          try {
+            const summary = wx.getStorageSync('family_summary_cache') || {};
+            summary.inviteCode = newCode;
+            summary.updatedAt  = Date.now();
+            wx.setStorageSync('family_summary_cache', summary);
+          } catch (e) {}
           wx.showToast({ title: '邀请码已刷新', icon: 'none' });
         } else {
           wx.showToast({ title: '刷新失败，无权限', icon: 'none' });
@@ -127,6 +145,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.removeStorageSync('family_id');
+          wx.removeStorageSync('family_summary_cache');
           getApp().globalData.needsOnboarding = true;
           wx.showToast({ title: '已退出家庭', icon: 'none' });
           setTimeout(() => wx.navigateBack(), 800);

@@ -17,7 +17,11 @@ Page({
     isSyncing: false,
     isLoading: true,
     syncError: false,
-    pendingCount: 0
+    pendingCount: 0,
+    // Family entry card
+    familyLinked: false,
+    familyMemberCount: 0,
+    familyInviteCode: ''
   },
 
   // Memoization: skip _computeStats + _buildChips when the input hasn't changed.
@@ -94,6 +98,13 @@ Page({
     const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
     const dateDisplay = `${now.getMonth() + 1}月${now.getDate()}日 ${weekdays[now.getDay()]}`;
 
+    // Family entry-card summary. Populated from a local cache written by
+    // the family page on its own cloud load — so Home doesn't need to hit
+    // cloud for this, and we still always render something informative.
+    const familyLinked = !!wx.getStorageSync('family_id');
+    let familySummary  = {};
+    try { familySummary = wx.getStorageSync('family_summary_cache') || {}; } catch (e) {}
+
     this.setData({
       greeting: datetime.greeting(),
       dateDisplay,
@@ -104,7 +115,10 @@ Page({
       isEmpty: sorted.length === 0,
       activeSleep: storage.getActiveSleep(),
       activeOuting: storage.getActiveOuting(),
-      pendingCount: cloud.pendingCount()
+      pendingCount: cloud.pendingCount(),
+      familyLinked,
+      familyMemberCount: familySummary.memberCount || 0,
+      familyInviteCode:  familySummary.inviteCode  || wx.getStorageSync('cached_invite_code') || ''
     });
   },
 
