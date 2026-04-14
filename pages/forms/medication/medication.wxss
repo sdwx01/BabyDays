@@ -17,3 +17,50 @@
 .form-textarea { width: 100%; min-height: 120rpx; background: #F8F8F8; border-radius: 12rpx; padding: 20rpx; font-size: 28rpx; color: #3D3D3D; border: 2rpx solid #F0F0F0; line-height: 1.6; }
 .save-btn { margin-top: 12rpx; color: #FFFFFF; border-radius: 999rpx; height: 96rpx; font-size: 32rpx; font-weight: 700; border: none; letter-spacing: 4rpx; width: 100%; }
 .save-btn::after { border: none; }
+
+/* Quick-select medication chips */
+.suggestion-label {
+  font-size: 22rpx;
+  color: #AAAAAA;
+  display: block;
+  margin: 20rpx 0 12rpx;
+}
+.suggestion-hint {
+  font-size: 20rpx;
+  color: #CCCCCC;
+}
+.suggestions-row {
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+}
+.med-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 12rpx 22rpx;
+  background: #F5F5F5;
+  border-radius: 999rpx;
+  margin-right: 12rpx;
+  border: 2rpx solid #EEEEEE;
+}
+.med-chip-custom {
+  background: #F3F6FF;
+  border-color: #D3DFFF;
+}
+.med-chip-active {
+  background: #E8F0FF;
+  border-color: #7EADFF;
+}
+.med-chip-text {
+  font-size: 24rpx;
+  color: #555555;
+  white-space: nowrap;
+}
+.med-chip-custom .med-chip-text { color: #3D4D80; }
+.med-chip-active .med-chip-text { color: #3A5BA0; font-weight: 600; }
+.med-chip-dot {
+  font-size: 26rpx;
+  color: #7EADFF;
+  margin-right: 6rpx;
+  line-height: 1;
+}

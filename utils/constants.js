@@ -63,6 +63,21 @@ const MILESTONE_SUGGESTIONS = [
   '第一次说话'
 ];
 
+// Common baby medications — seed list used when the user-added
+// medication list is empty. Each entry may include a suggested default
+// dose; the form just prefills that field and lets the user adjust.
+const COMMON_MEDICATIONS = [
+  { name: '维生素D滴剂',      dose: '400 IU' },
+  { name: '维生素AD',          dose: '1 粒' },
+  { name: '布洛芬混悬液',      dose: '' },
+  { name: '对乙酰氨基酚',      dose: '' },
+  { name: '益生菌',            dose: '1 袋' },
+  { name: '开塞露',            dose: '' },
+  { name: '蒙脱石散',          dose: '' },
+  { name: '口服补液盐',        dose: '' },
+  { name: '小儿氨酚黄那敏',    dose: '' }
+];
+
 module.exports = {
   CATEGORIES,
   CATEGORY_MAP,
@@ -74,5 +89,6 @@ module.exports = {
   WEATHER_OPTIONS,
   FOOD_REACTIONS,
   MILESTONE_TYPES,
-  MILESTONE_SUGGESTIONS
+  MILESTONE_SUGGESTIONS,
+  COMMON_MEDICATIONS
 };

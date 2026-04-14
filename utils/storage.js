@@ -256,6 +256,71 @@ function clearActiveOuting() {
   wx.removeStorageSync('active_outing');
 }
 
+// ─── User medications (quick-select list) ────────────────────────────────────
+//
+// Medications the user has logged before, remembered for fast re-selection
+// on future entries. Stored as `{ name, dose, lastUsedAt }` keyed by name
+// (case-insensitive de-dupe). Capped at MAX_USER_MEDS so the list doesn't
+// grow unbounded — oldest entries fall off. Newest-first ordering.
+
+const USER_MEDS_KEY = 'user_medications';
+const MAX_USER_MEDS = 30;
+
+function getUserMedications() {
+  try {
+    const list = wx.getStorageSync(USER_MEDS_KEY);
+    return Array.isArray(list) ? list : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+/**
+ * Records a medication as used: upserts by (case-insensitive) name,
+ * updates the dose and lastUsedAt, reorders newest-first, and caps
+ * the list at MAX_USER_MEDS.
+ */
+function recordUserMedication(name, dose) {
+  const clean = (name || '').trim();
+  if (!clean) return false;
+
+  let list = getUserMedications();
+  const key = clean.toLowerCase();
+  list = list.filter(m => (m.name || '').toLowerCase() !== key);
+
+  list.unshift({
+    name: clean,
+    dose: (dose || '').trim(),
+    lastUsedAt: Date.now()
+  });
+
+  if (list.length > MAX_USER_MEDS) list = list.slice(0, MAX_USER_MEDS);
+
+  try {
+    wx.setStorageSync(USER_MEDS_KEY, list);
+    return true;
+  } catch (e) {
+    console.error('[storage] recordUserMedication error:', e);
+    return false;
+  }
+}
+
+/**
+ * Removes a medication from the user's quick-select list by name
+ * (case-insensitive). Used by the management UI on the medication form.
+ */
+function deleteUserMedication(name) {
+  const key = (name || '').trim().toLowerCase();
+  if (!key) return false;
+  const list = getUserMedications().filter(m => (m.name || '').toLowerCase() !== key);
+  try {
+    wx.setStorageSync(USER_MEDS_KEY, list);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 // ─── App Metadata ─────────────────────────────────────────────────────────────
 
 function getAppMeta() {
@@ -291,5 +356,8 @@ module.exports = {
   setActiveOuting,
   clearActiveOuting,
   getAppMeta,
-  setAppMeta
+  setAppMeta,
+  getUserMedications,
+  recordUserMedication,
+  deleteUserMedication
 };
