@@ -121,6 +121,59 @@ function deleteRecord(id, dateKey) {
 }
 
 /**
+ * Replaces an existing record entirely.
+ *
+ * If the new dateKey differs from the old one the record is moved between
+ * day buckets (removed from old, inserted into new). The record id is
+ * preserved so cloud documents stay addressable by the same _id.
+ *
+ * `newRecord` should carry the same `id` as the original.
+ */
+function replaceRecord(oldId, oldDateKey, newRecord) {
+  try {
+    const oldList = getRecordsByDate(oldDateKey);
+    const oldIdx = oldList.findIndex(r => r.id === oldId);
+
+    // Preserve audit fields from the original record
+    if (oldIdx !== -1) {
+      const orig = oldList[oldIdx];
+      if (!newRecord.createdAt)   newRecord.createdAt   = orig.createdAt;
+      if (!newRecord.creatorName) newRecord.creatorName = orig.creatorName;
+    }
+
+    if (oldDateKey === newRecord.dateKey) {
+      if (oldIdx === -1) return false;
+      oldList[oldIdx] = newRecord;
+      wx.setStorageSync(`records_${oldDateKey}`, oldList);
+    } else {
+      // Cross-date move
+      if (oldIdx !== -1) {
+        oldList.splice(oldIdx, 1);
+        wx.setStorageSync(`records_${oldDateKey}`, oldList);
+      }
+      const newList = getRecordsByDate(newRecord.dateKey);
+      newList.push(newRecord);
+      wx.setStorageSync(`records_${newRecord.dateKey}`, newList);
+      _ensureDateInIndex(newRecord.dateKey);
+    }
+  } catch (e) {
+    console.error('[storage] replaceRecord error:', e);
+    return false;
+  }
+
+  if (cloud.isAvailable()) {
+    cloud.replaceRecord(newRecord, oldId, oldDateKey).then(ok => {
+      if (!ok) cloud.enqueuePending('replace', newRecord.id, newRecord.dateKey, { record: newRecord, oldId, oldDateKey });
+    }).catch(() => {
+      cloud.enqueuePending('replace', newRecord.id, newRecord.dateKey, { record: newRecord, oldId, oldDateKey });
+    });
+  } else {
+    cloud.enqueuePending('replace', newRecord.id, newRecord.dateKey, { record: newRecord, oldId, oldDateKey });
+  }
+  return true;
+}
+
+/**
  * Gets the sorted (desc) days index
  */
 function getDaysIndex() {
@@ -227,6 +280,7 @@ module.exports = {
   getRecordsByDate,
   addRecord,
   updateRecord,
+  replaceRecord,
   deleteRecord,
   getDaysIndex,
   getLastRecordOfType,

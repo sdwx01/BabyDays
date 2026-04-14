@@ -2,7 +2,7 @@
   <!-- Emoji header -->
   <view class="form-hero" style="background: linear-gradient(135deg, #FFB5C8, #FF8FAB);">
     <text class="form-hero-emoji">🍼</text>
-    <text class="form-hero-title">记录喂奶</text>
+    <text class="form-hero-title">{{isEdit ? '编辑喂奶记录' : '记录喂奶'}}</text>
   </view>
 
   <view class="form-body">
@@ -76,6 +76,6 @@
     </view>
 
     <!-- Save button -->
-    <button class="btn-primary save-btn" bindtap="onSave">保存记录</button>
+    <button class="btn-primary save-btn" bindtap="onSave">{{isEdit ? '更新记录' : '保存记录'}}</button>
   </view>
 </scroll-view>

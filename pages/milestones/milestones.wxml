@@ -1,0 +1,103 @@
+<scroll-view scroll-y class="milestones-page">
+  <!-- Hero -->
+  <view class="ms-hero">
+    <text class="ms-hero-emoji">⭐</text>
+    <text class="ms-hero-title">成长相册</text>
+    <text class="ms-hero-sub">珍藏宝宝每一个珍贵的第一次</text>
+    <view class="ms-stats" wx:if="{{!isEmpty}}">
+      <view class="ms-stat">
+        <text class="ms-stat-value">{{totalCount}}</text>
+        <text class="ms-stat-label">里程碑</text>
+      </view>
+      <view class="ms-stat-divider"></view>
+      <view class="ms-stat">
+        <text class="ms-stat-value">{{firstsCount}}</text>
+        <text class="ms-stat-label">第一次</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Empty -->
+  <view class="ms-empty" wx:if="{{isEmpty && !isLoading}}">
+    <text class="ms-empty-emoji">📖</text>
+    <text class="ms-empty-text">还没有记录里程碑</text>
+    <text class="ms-empty-sub">宝宝的每一个第一次都值得被记住</text>
+    <view class="ms-empty-btn" bindtap="onAddTap">
+      <text class="ms-empty-btn-text">+ 记录第一个里程碑</text>
+    </view>
+  </view>
+
+  <!-- Loading skeleton -->
+  <view class="ms-body" wx:if="{{isLoading && isEmpty}}">
+    <view class="ms-skeleton" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
+  </view>
+
+  <!-- Timeline groups -->
+  <view class="ms-body" wx:if="{{!isEmpty}}">
+    <view class="ms-group" wx:for="{{groups}}" wx:for-item="g" wx:key="monthKey">
+      <view class="ms-month">
+        <text class="ms-month-label">{{g.monthLabel}}</text>
+        <text class="ms-month-count">{{g.items.length}} 个</text>
+      </view>
+
+      <view
+        class="ms-item"
+        wx:for="{{g.items}}"
+        wx:for-item="m"
+        wx:key="id"
+        bindtap="onItemTap"
+        data-id="{{m.id}}"
+        data-date-key="{{m.dateKey}}"
+      >
+        <!-- Cover: photo, video thumb, or placeholder -->
+        <view class="ms-cover">
+          <image
+            wx:if="{{m.cover}}"
+            class="ms-cover-img"
+            src="{{m.cover}}"
+            mode="aspectFill"
+          />
+          <video
+            wx:elif="{{m.coverIsVideo && m.coverVideo}}"
+            class="ms-cover-img"
+            src="{{m.coverVideo}}"
+            controls="{{false}}"
+            show-center-play-btn="{{true}}"
+            object-fit="cover"
+          ></video>
+          <view class="ms-cover-placeholder" wx:else>
+            <text class="ms-cover-placeholder-emoji">⭐</text>
+          </view>
+
+          <!-- Media count badges -->
+          <view class="ms-badges">
+            <view class="ms-badge" wx:if="{{m.photoCount > 0}}">
+              <text class="ms-badge-text">📷 {{m.photoCount}}</text>
+            </view>
+            <view class="ms-badge" wx:if="{{m.videoCount > 0}}">
+              <text class="ms-badge-text">🎬 {{m.videoCount}}</text>
+            </view>
+          </view>
+
+          <view class="ms-first-tag" wx:if="{{m.isFirst}}">
+            <text class="ms-first-text">⭐ 第一次</text>
+          </view>
+        </view>
+
+        <view class="ms-meta">
+          <text class="ms-title">{{m.title}}</text>
+          <text class="ms-type" wx:if="{{m.milestoneType}}">{{m.milestoneType}}</text>
+          <text class="ms-desc" wx:if="{{m.description}}">{{m.description}}</text>
+          <text class="ms-date">{{m.dateDisplay}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="ms-bottom-spacer"></view>
+  </view>
+
+  <!-- Floating add button -->
+  <view class="ms-fab" wx:if="{{!isEmpty}}" bindtap="onAddTap">
+    <text class="ms-fab-text">+ 新里程碑</text>
+  </view>
+</scroll-view>

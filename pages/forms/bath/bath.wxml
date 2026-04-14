@@ -1,7 +1,7 @@
 <scroll-view scroll-y class="form-page">
   <view class="form-hero" style="background: linear-gradient(135deg, #B5E8FF, #7EC8FF);">
     <text class="form-hero-emoji">🛁</text>
-    <text class="form-hero-title">记录洗澡</text>
+    <text class="form-hero-title">{{isEdit ? '编辑洗澡记录' : '记录洗澡'}}</text>
   </view>
 
   <view class="form-body">
@@ -59,6 +59,6 @@
       <textarea class="form-textarea" value="{{notes}}" placeholder="添加备注..." bindinput="onNotesInput" auto-height />
     </view>
 
-    <button class="save-btn" style="background: #7EC8FF;" bindtap="onSave">保存记录</button>
+    <button class="save-btn" style="background: #7EC8FF;" bindtap="onSave">{{isEdit ? '更新记录' : '保存记录'}}</button>
   </view>
 </scroll-view>

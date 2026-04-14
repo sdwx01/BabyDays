@@ -94,6 +94,56 @@
   color: #BBBBBB;
 }
 
+/* Video list */
+.video-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.video-item {
+  position: relative;
+  width: 100%;
+  border-radius: 16rpx;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-thumb {
+  width: 100%;
+  height: 400rpx;
+  display: block;
+}
+
+.video-remove {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 999rpx;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.video-add {
+  width: 100%;
+  height: 160rpx;
+  border-radius: 16rpx;
+  border: 3rpx dashed #DDDDDD;
+  background: #FAFAFA;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+.video-add .photo-add-icon { font-size: 40rpx; margin: 0; }
+.video-add .photo-add-text { font-size: 26rpx; color: #888; }
+
 /* Save button */
 .save-btn { margin-top: 12rpx; background: #FFD700; color: #7D6000; border-radius: 999rpx; height: 96rpx; font-size: 32rpx; font-weight: 700; border: none; letter-spacing: 4rpx; width: 100%; }
 .save-btn::after { border: none; }

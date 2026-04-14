@@ -139,6 +139,49 @@
   display: inline-block;
 }
 
+/* Milestone recap entry card */
+.milestone-entry {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16rpx 24rpx 0;
+  padding: 24rpx 28rpx;
+  background: linear-gradient(135deg, #FFF9E0 0%, #FFF4B5 100%);
+  border-radius: 20rpx;
+  border: 2rpx solid #FFE082;
+  box-shadow: 0 4rpx 16rpx rgba(255, 215, 0, 0.22);
+}
+.milestone-entry-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+}
+.milestone-entry-emoji {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+}
+.milestone-entry-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.milestone-entry-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #7D6000;
+}
+.milestone-entry-sub {
+  font-size: 22rpx;
+  color: #B8860B;
+  margin-top: 4rpx;
+}
+.milestone-entry-arrow {
+  font-size: 40rpx;
+  color: #B8860B;
+}
+
 /* Section */
 .section-wrapper {
   padding: 24rpx 24rpx 0;

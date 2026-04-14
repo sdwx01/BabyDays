@@ -185,5 +185,9 @@ Page({
 
   goToFamily() {
     wx.navigateTo({ url: '/pages/family/family' });
+  },
+
+  goToMilestones() {
+    wx.navigateTo({ url: '/pages/milestones/milestones' });
   }
 });

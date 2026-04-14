@@ -1,7 +1,7 @@
 <scroll-view scroll-y class="form-page">
   <view class="form-hero" style="background: linear-gradient(135deg, #B5D5FF, #7EADFF);">
     <text class="form-hero-emoji">💊</text>
-    <text class="form-hero-title">记录用药</text>
+    <text class="form-hero-title">{{isEdit ? '编辑用药记录' : '记录用药'}}</text>
   </view>
 
   <view class="form-body">
@@ -36,6 +36,6 @@
       <textarea class="form-textarea" value="{{notes}}" placeholder="添加备注，如服药原因、宝宝反应..." bindinput="onNotesInput" auto-height />
     </view>
 
-    <button class="save-btn" style="background: #7EADFF;" bindtap="onSave">保存记录</button>
+    <button class="save-btn" style="background: #7EADFF;" bindtap="onSave">{{isEdit ? '更新记录' : '保存记录'}}</button>
   </view>
 </scroll-view>

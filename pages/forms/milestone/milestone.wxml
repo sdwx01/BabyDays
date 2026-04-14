@@ -1,7 +1,7 @@
 <scroll-view scroll-y class="form-page">
   <view class="form-hero" style="background: linear-gradient(135deg, #FFF4B5, #FFD700);">
     <text class="form-hero-emoji">⭐</text>
-    <text class="form-hero-title">记录里程碑</text>
+    <text class="form-hero-title">{{isEdit ? '编辑里程碑' : '记录里程碑'}}</text>
     <text class="form-hero-sub">记录宝宝每一个珍贵的第一次</text>
   </view>
 
@@ -55,7 +55,6 @@
     <view class="card">
       <text class="card-section-label">📷 照片（选填，最多9张）</text>
       <view class="photo-grid">
-        <!-- Existing photos -->
         <view class="photo-item" wx:for="{{photos}}" wx:key="*this">
           <image
             class="photo-thumb"
@@ -68,7 +67,6 @@
             <text class="photo-remove-text">✕</text>
           </view>
         </view>
-        <!-- Add button -->
         <view class="photo-add" wx:if="{{photos.length < 9}}" bindtap="onChoosePhoto">
           <text class="photo-add-icon">+</text>
           <text class="photo-add-text">添加照片</text>
@@ -76,8 +74,31 @@
       </view>
     </view>
 
+    <!-- Video picker -->
+    <view class="card">
+      <text class="card-section-label">🎬 短视频（选填，最多3段 · 60秒）</text>
+      <view class="video-list">
+        <view class="video-item" wx:for="{{videos}}" wx:key="*this">
+          <video
+            class="video-thumb"
+            src="{{item}}"
+            controls="{{true}}"
+            show-center-play-btn="{{true}}"
+            object-fit="cover"
+          ></video>
+          <view class="video-remove" catchtap="onRemoveVideo" data-index="{{index}}">
+            <text class="photo-remove-text">✕</text>
+          </view>
+        </view>
+        <view class="video-add" wx:if="{{videos.length < 3}}" bindtap="onChooseVideo">
+          <text class="photo-add-icon">🎥</text>
+          <text class="photo-add-text">拍摄 / 选择视频</text>
+        </view>
+      </view>
+    </view>
+
     <button class="save-btn" bindtap="onSave" disabled="{{uploading}}">
-      {{uploading ? '上传中...' : '保存里程碑'}}
+      {{uploading ? '上传中...' : (isEdit ? '更新里程碑' : '保存里程碑')}}
     </button>
   </view>
 </scroll-view>

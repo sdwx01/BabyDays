@@ -57,6 +57,18 @@
     <view class="skeleton-card" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
   </view>
 
+  <!-- Milestone recap entry -->
+  <view class="milestone-entry" bindtap="goToMilestones">
+    <view class="milestone-entry-left">
+      <text class="milestone-entry-emoji">⭐</text>
+      <view class="milestone-entry-text">
+        <text class="milestone-entry-title">成长相册</text>
+        <text class="milestone-entry-sub">回顾宝宝的每一个第一次</text>
+      </view>
+    </view>
+    <text class="milestone-entry-arrow">›</text>
+  </view>
+
   <!-- Today's timeline -->
   <view class="section-wrapper" wx:if="{{!isEmpty}}">
     <section-header emoji="📋" title="今日记录" color="#FF8FAB" />

@@ -36,13 +36,30 @@
     </view>
   </view>
 
+  <!-- Videos (milestone only) -->
+  <view class="photos-card" wx:if="{{videos.length > 0}}">
+    <text class="photos-title">🎬 短视频</text>
+    <view class="videos-list">
+      <video
+        wx:for="{{videos}}"
+        wx:key="*this"
+        class="video-player"
+        src="{{item}}"
+        controls="{{true}}"
+        show-center-play-btn="{{true}}"
+        object-fit="cover"
+      ></video>
+    </view>
+  </view>
+
   <!-- Logged at -->
   <view class="meta-row">
     <text class="meta-text">记录于 {{createdAtDisplay}}</text>
   </view>
 
-  <!-- Delete button -->
-  <view class="delete-area">
+  <!-- Edit + Delete buttons -->
+  <view class="action-area">
+    <button class="edit-btn" bindtap="onEdit">编辑此记录</button>
     <button class="delete-btn" bindtap="onDelete">删除此记录</button>
   </view>
 </view>
